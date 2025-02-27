@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver Spoon</title>
+    <link rel="stylesheet" href="/css/items.css">
+
+    
+</head>
+
+<body>
+    <div>
+        <h1>Menu</h1>
+        <a href="/"><h1>Silver Spoon</h1></a>
+        <a href="items/new"><h3>List item</h3></a>
+        <a href="/users/new"><h3>Sign up</h3></a>
+        <a href="/users/login"><h3>Log in</h3></a>
+        <a href="/users/logout"><h3>Log out</h3></a>
+    </div>
+      
+    <main>
+        <div class="grid-container-products">
+            <% if(items.length) { %>
+                    <% items.forEach(item =>{ %>
+                            <div>
+                                <a href="/items/<%= item.id %>">
+                                    <img src="<%=item.image%>">
+                                </a>
+                                <a href="/items/<%= item.id %>">
+                                    <h3 class="name"><%= item.name %></h3>
+                                </a>
+                                <p class="condition"><%= item.description %></p>
+                                <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>                    
+        </div>
+
+                    <% });
+                } else { %>
+                    <p>There are no items to display.</p>
+                <% } %>
+
+    </main>
+
+    
+</body>
+</html>
