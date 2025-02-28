@@ -1,0 +1,18 @@
+
+
+.topnav .links ul li a{
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.topnav .links ul li a:hover{
+    font-weight: bold;
+    color: teal;
+}
+
+h1, a{
+    text-decoration: none;
+    color: black;
+}
