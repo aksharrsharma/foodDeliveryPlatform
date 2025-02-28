@@ -13,5 +13,5 @@
 
 ## Create guest account (create an account with minimal privileges)
 ##### Click the 'sign up' tab
-##### leage admin field empty (test with wrong and error message flashes)
+##### keep admin field empty (test with wrong and notice an error message flashes)
 ##### Notice 'my cart' tab appears (sign up/login disappears, logout tab appears) 
