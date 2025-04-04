@@ -1,4 +1,4 @@
-## Start the app
+### Start the app
 1. Download/unzip open in vscode.
 2. Open the terminal and enter 'npm i'
 3. In the terminal and enter 'nodemon app' to start the app.
