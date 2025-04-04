@@ -6,9 +6,6 @@ const {validateSignup, validateLogin, validateResult} = require('../middlewares/
 
 const router = express.Router({mergeParams: true}); // make the router
 
-// get all orders associated with the user
-// router.get('/', isLoggedIn, isNotAdmin, controller.index);
-
 // new order 
 router.post('/', isLoggedIn, isNotAdmin, controller.new);
 
