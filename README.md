@@ -1,8 +1,8 @@
 ## Start the app
-1. download/unzip open in vscode
-2. open the terminal and enter 'npm i'
-3. in the terminal and enter 'nodemon app' to start the app
-4. in chrome search up 'localhost:3000'
+1. Download/unzip open in vscode.
+2. Open the terminal and enter 'npm i'
+3. In the terminal and enter 'nodemon app' to start the app.
+4. In chrome search up 'localhost:3000'.
 
 ## Sprint 2 (LATEST VERSION!)
 ### Edit an existing item
@@ -28,12 +28,12 @@
 
 ## Sprint 1
 ### Create admin account (create an account with privileges)
-1. Click the 'sign up' tab
-2. fill out fields, enter 'silverSpoon' in admin field
-3. click the 'list a new item' tab that appears, (sign up/login disappears, logout tab appears)
-4. enter the new item's description in the fields and submit
+1. Click the 'sign up' tab.
+2. Fill out fields, enter 'silverSpoon' in admin field.
+3. Click the 'list a new item' tab that appears, (sign up/login disappears, logout tab appears).
+4. Enter the new item's description in the fields and submit.
 
 ### Create guest account (create an account with minimal privileges)
-1. Click the 'sign up' tab
-2. keep admin field empty (test with wrong and notice an error message flashes)
-3. Notice 'my cart' tab appears (sign up/login disappears, logout tab appears) 
+1. Click the 'sign up' tab.
+2. Keep admin field empty (test with wrong and notice an error message flashes).
+3. Notice 'my cart' tab appears (sign up/login disappears, logout tab appears).
