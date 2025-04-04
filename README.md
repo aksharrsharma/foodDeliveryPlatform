@@ -1,17 +1,39 @@
 ## Start the app
-##### download/unzip open in vscode
-##### open the terminal and enter 'npm i'
-##### in the terminal and enter 'nodemon app' to start the app
-##### in chrome search up 'localhost:3000'
+1. download/unzip open in vscode
+2. open the terminal and enter 'npm i'
+3. in the terminal and enter 'nodemon app' to start the app
+4. in chrome search up 'localhost:3000'
 
-## Create admin account (create an account with privileges)
-##### Click the 'sign up' tab
-##### fill out fields, enter 'silverSpoon' in admin field
-##### click the 'list a new item' tab that appears, (sign up/login disappears, logout tab appears)
-##### enter the new item's description in the fields and submit
+## Sprint 2 (LATEST VERSION!)
+### Edit an existing item
+1. Login admin account, then click the item you wish to edit.
+2. Click the edit button, an edit form will appear.
+3. Fill out the form to modify item attibutes, then submit to save.
+4. Non-admin is unauthorized to edit items.
 
+### Delete an existing item
+1. Login admin account, then click the item you wish to delete.
+2. Click the delete button the item will delete.
+3. Non-admin is unauthorized to delete items.
 
-## Create guest account (create an account with minimal privileges)
-##### Click the 'sign up' tab
-##### keep admin field empty (test with wrong and notice an error message flashes)
-##### Notice 'my cart' tab appears (sign up/login disappears, logout tab appears) 
+### Add items to cart
+1. Login non-admin account, then go to menu.
+2. Click button 'add to cart' below item image, or the click the 'add to cart' button on the item page.
+3. Admin is unauthorized to add items to cart.
+
+### Delete items from cart
+1. Login non-admin account, then go to 'my cart'.
+2. Click button 'delete from cart' below image, or click the 'delete from cart' button on the item page.
+3. Admin is unauthorized to delete items from cart. 
+
+## Sprint 1
+### Create admin account (create an account with privileges)
+1. Click the 'sign up' tab
+2. fill out fields, enter 'silverSpoon' in admin field
+3. click the 'list a new item' tab that appears, (sign up/login disappears, logout tab appears)
+4. enter the new item's description in the fields and submit
+
+### Create guest account (create an account with minimal privileges)
+1. Click the 'sign up' tab
+2. keep admin field empty (test with wrong and notice an error message flashes)
+3. Notice 'my cart' tab appears (sign up/login disappears, logout tab appears) 
