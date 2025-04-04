@@ -20,6 +20,7 @@
 1. Login non-admin account, then go to menu.
 2. Click button 'add to cart' below item image, or the click the 'add to cart' button on the item page.
 3. Admin is unauthorized to add items to cart.
+4. The cart associates with the user, if another user logs in, their unique cart is displayed. 
 
 ### Delete items from cart
 1. Login non-admin account, then go to 'my cart'.
