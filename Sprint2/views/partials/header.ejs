@@ -1,3 +1,4 @@
+<!-- Updated header with cart -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="/css/error.css">
     <!-- Footer styles -->
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -31,13 +34,16 @@
                         <% if(isAdmin){ %>
                             <li><a href="/items/new"><i class="fas fa-plus-circle"></i> Add Menu Item</a></li>
                         <% } else { %>
-                            <li><a href="/profile/mycart"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
+                            <li><a href="/profile/mycart" class="cart-badge" data-count="0"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
                         <% } %>
                     <% } %>
                 </ul>
             </div>
         </div>
     </header>
+    
+    <!-- Cart notification container -->
+    <div class="cart-notification-container"></div>
     
     <!-- Flash Messages -->
     <% if(errorMessages.length > 0){ 
