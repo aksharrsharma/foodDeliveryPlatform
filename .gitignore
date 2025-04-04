@@ -1,0 +1,5 @@
+# Hide sensitive files and folders
+.env
+.env.test
+node_modules/
+coverage/.DS_Store
