@@ -365,7 +365,7 @@ button:focus {
 
 .cart-item {
   display: grid;
-  grid-template-columns: minmax(80px, 120px) 2fr 120px 120px 100px;
+  grid-template-columns: minmax(80px, 120px) 2fr 80px 100px 100px 100px;
   align-items: center;
   padding: 1.5rem;
   border-bottom: 1px solid #eee;
@@ -415,6 +415,20 @@ button:focus {
 }
 
 .item-quantity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-quantity .quantity-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -639,14 +653,17 @@ button:focus {
 
 .item-buttons {
   display: flex;
+  flex-direction: row;
   gap: 1rem;
   margin-top: 1.5rem;
   width: 100%;
+  justify-content: center;
 }
 
 .item-buttons form {
   flex: 1;
-  min-width: 150px;
+  min-width: 100px;
+  max-width: 180px;
 }
 
 .item-buttons button {
