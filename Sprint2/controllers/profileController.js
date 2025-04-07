@@ -44,3 +44,31 @@ exports.displayUserCart = async (req, res, next) => {
         return res.redirect('/items');
     }
 };
+
+exports.getCartCount = async (req, res, next) => {
+    try {
+        if (!req.session.user) {
+            return res.json({ count: 0 });
+        }
+
+        let customerId = req.session.user;
+        
+        // Find all orders for this customer
+        const orders = await Order.find({ customerId: customerId });
+        
+        // Calculate total items quantity
+        let totalCount = 0;
+        orders.forEach(order => {
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    totalCount += item.quantity || 1;
+                });
+            }
+        });
+        
+        return res.json({ count: totalCount });
+    } catch (err) {
+        console.error("Error getting cart count:", err);
+        return res.json({ count: 0 });
+    }
+};

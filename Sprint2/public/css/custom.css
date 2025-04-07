@@ -930,3 +930,99 @@ form .delete-button:hover,
     right: 5%;
   }
 }
+
+/* Cart Badge Styles */
+.cart-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cart-badge.has-items::after {
+  content: attr(data-count);
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Cart Notification */
+.cart-notification {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px 20px;
+  max-width: 350px;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-left: 4px solid teal;
+  margin-bottom: 10px;
+}
+
+.cart-notification.notification-visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.cart-notification.notification-hiding {
+  transform: translateX(400px);
+  opacity: 0;
+}
+
+.notification-icon {
+  color: teal;
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.notification-content {
+  flex-grow: 1;
+  padding: 0 5px;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  margin-left: 10px;
+  transition: color 0.2s ease;
+}
+
+.notification-close:hover {
+  color: #666;
+}

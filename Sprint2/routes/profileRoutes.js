@@ -8,7 +8,7 @@ const router = express.Router();
 // get all orders associated with the user
 router.get('/mycart', isLoggedIn, isNotAdmin, controller.displayUserCart);
 
-// new order 
-// router.post('/', isLoggedIn, isNotAdmin, controller.new);
+// Add new route for cart count
+router.get('/mycart/count', isLoggedIn, controller.getCartCount);
 
-module.exports = router; 
+module.exports = router;
