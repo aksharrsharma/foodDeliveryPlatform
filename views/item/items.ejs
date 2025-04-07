@@ -1,0 +1,44 @@
+<%- include('../partials/header.ejs')%>
+<link rel="stylesheet" type="text/css" href="/css/items.css">
+
+<main>
+    <div class="menu-header">
+        <h2>Today's Menu</h2>
+        <p>Explore our delicious offerings prepared with love and quality ingredients</p>
+    </div>
+
+    <div class="grid-container-products">
+        <% if(items.length) { %>
+            <% items.forEach(item =>{ %>
+                
+                <div class="menu-item">
+                    <a href="/items/<%= item.id %>">
+                        <img src="<%=item.image%>" alt="<%= item.name %>">
+                    </a>
+                    <a href="/items/<%= item.id %>">
+                        <h3 class="name"><%= item.name %></h3>
+                    </a>
+                    <p class="condition"><%= item.description %></p>
+                    <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>
+                    <% if(!isAdmin) { %>
+                        <form action='/items/<%=item._id%>/orders' method='POST'>
+                            <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                        </form>
+                        <!-- <form action="/items/<%=item._id%>/orders?_method=DELETE" method="POST">
+                            <button class="delete-button"><i class="fas fa-trash-alt"></i> Delete from Cart</button>
+                        </form> -->
+                    <% } %>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="empty-state">
+                <p>There are no menu items available at the moment.</p>
+                <% if(isAdmin) { %>
+                    <a href="/items/new" class="cta-button"><i class="fas fa-plus-circle"></i> Add Menu Item</a>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/footer.ejs')%>
