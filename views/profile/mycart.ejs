@@ -1,0 +1,75 @@
+<%- include('../partials/header.ejs')%>
+<link rel="stylesheet" type="text/css" href="/css/cart.css">
+
+<main>
+    <div class="cart-container">
+        <h2 class="cart-title"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+        
+        <% if (order && order.length > 0) { %>
+            <div class="cart-items">
+                <% let total = 0; %>
+                <% order.forEach(orderItem => { %>
+                    <% if(parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
+                        <% orderItem.items.forEach(item => { %>
+                            <div class="cart-item" data-item-id="<%= item.itemId._id %>">
+                                <div class="item-image">
+                                    <img src="<%= item.itemId.image %>" alt="<%= item.itemId.name %>">
+                                </div>
+                                <div class="item-details">
+                                    <h3><%= item.itemId.name %></h3>
+                                    <p class="item-description"><%= item.itemId.description %></p>
+                                </div>
+                                <div class="item-quantity">
+                                    <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
+                                    <span class="quantity-value"><%= item.quantity %></span>
+                                    <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="item-price">$<%= parseFloat(item.itemId.price).toFixed(2) %></div>
+                                <div class="item-subtotal">$<%= parseFloat(item.itemId.price * item.quantity).toFixed(2) %></div>
+                                <div class="item-remove">
+                                    <form action="/items/<%= item.itemId._id %>/orders?_method=DELETE" method="POST">
+                                        <button type="submit" class="remove-btn"><i class="fas fa-trash-alt"></i> Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% total += item.itemId.price * item.quantity; %>
+                        <% }); %>
+                    <% } %>
+                <% }); %>
+                
+                <div class="cart-summary">
+                    <div class="subtotal">
+                        <span>Subtotal:</span>
+                        <span class="amount">$<%= parseFloat(total).toFixed(2) %></span>
+                    </div>
+                    
+                    <div class="tax">
+                        <span>Tax (8%):</span>
+                        <% const tax = total * 0.08; %>
+                        <span class="amount">$<%= parseFloat(tax).toFixed(2) %></span>
+                    </div>
+                    
+                    <div class="total">
+                        <span>Total:</span>
+                        <span class="amount">$<%= parseFloat(total + tax).toFixed(2) %></span>
+                    </div>
+                </div>
+                
+                <div class="cart-actions">
+                    <a href="/items" class="continue-shopping"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+                    <form action="/orders/checkout" method="POST">
+                        <button class="checkout-btn"><i class="fas fa-credit-card"></i> Proceed to Checkout</button>
+                    </form>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="empty-cart">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Your cart is empty</p>
+                <a href="/items" class="cta-button">Browse Our Menu</a>
+            </div>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/footer.ejs')%>

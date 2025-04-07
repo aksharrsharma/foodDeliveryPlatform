@@ -1,0 +1,22 @@
+<%- include('./partials/header.ejs')%>
+<link rel="stylesheet" type="text/css" href="/css/error.css">
+
+<main>
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <div class="error-message">
+            <h2><%= error.status %> Error</h2>
+            <p><%= error.message %></p>
+        </div>
+        
+        <div class="error-actions">
+            <a href="/" class="home-button"><i class="fas fa-home"></i> Return to Home</a>
+            <a href="javascript:history.back()" class="back-button"><i class="fas fa-arrow-left"></i> Go Back</a>
+        </div>
+    </div>
+</main>
+
+<%- include('./partials/footer.ejs')%>
