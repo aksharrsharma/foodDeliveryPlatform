@@ -134,7 +134,7 @@ describe('View Cart (Logged-In User)', () => {
     const res = await request(app)
       .get('/profile/mycart')
       .set('Cookie', userSession);
-
+      
     expect(res.statusCode).toBe(200);
     expect(res.text).toContain('My Cart');
     expect(res.text).toContain('Taco');
