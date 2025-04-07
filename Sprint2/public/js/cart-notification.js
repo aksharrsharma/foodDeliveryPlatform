@@ -18,28 +18,38 @@ document.addEventListener('DOMContentLoaded', function() {
       // Mark this button as having a handler attached
       button.dataset.handlerAttached = 'true';
       
-      if (!button.closest('form')) {
+      // Only handle clicks on buttons that are not part of a form submission
+      if (!button.closest('form') || e.preventDefault) {
         e.preventDefault();
         
         // Get item details
         const itemContainer = button.closest('.menu-item') || button.closest('.item-container');
-        const itemName = itemContainer.querySelector('.name').textContent;
-        const itemPrice = itemContainer.querySelector('.price').textContent;
+        const itemName = itemContainer ? itemContainer.querySelector('.name').textContent : 'Item';
         
         // Add item to cart via AJAX (this uses the existing backend route)
-        const itemId = button.dataset.itemId || button.closest('a')?.href.split('/').pop().split('?')[0];
+        const itemId = button.dataset.itemId || 
+                      (button.closest('a') ? button.closest('a').href.split('/').pop() : null) ||
+                      (button.closest('form') ? button.closest('form').action.split('/').pop().split('?')[0] : null);
         
         if (itemId) {
           fetch(`/items/${itemId}/orders`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ quantity: 1 })
           })
           .then(response => {
             if (response.ok) {
               // Show notification with the item name
               showCartNotification(itemName);
+              
+              // Wait briefly then reload the page to update cart count
+              setTimeout(() => {
+                window.location.href = '/profile/mycart';
+              }, 1000);
+            } else {
+              console.error('Error response from server');
             }
           })
           .catch(error => {
@@ -54,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to show notification
 function showCartNotification(itemName) {
   const container = document.querySelector('.cart-notification-container');
+  if (!container) return;
   
   // Create notification element
   const notification = document.createElement('div');

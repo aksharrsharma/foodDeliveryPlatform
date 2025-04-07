@@ -1,7 +1,7 @@
 const Item = require('../models/item');
 const Order = require('../models/order');
 
-exports.new = async(req, res) => {
+exports.new = async(req, res, next) => {
     try {
         let itemId = req.params.id;
         let customerId = req.session.user;
@@ -44,14 +44,29 @@ exports.new = async(req, res) => {
         }
         
         await order.save();
-        return res.status(200).json({ success: true });
+
+        // Check if it's an AJAX request (has Content-Type: application/json)
+        const isAjax = req.get('Content-Type') === 'application/json';
+        
+        if (isAjax) {
+            return res.status(200).json({ success: true });
+        } else {
+            // For regular form submissions, redirect to cart
+            req.flash('success', 'Item added to cart!');
+            return res.redirect('/profile/mycart');
+        }
     } catch(err) {
         console.error('Error adding to cart:', err);
-        return res.status(500).json({ success: false, error: err.message });
+        if (req.get('Content-Type') === 'application/json') {
+            return res.status(500).json({ success: false, error: err.message });
+        } else {
+            req.flash('error', 'Error adding item to cart');
+            return res.redirect('/items');
+        }
     }
 };
 
-exports.delete = async(req, res) => {
+exports.delete = async(req, res, next) => {
     try {
         let itemId = req.params.id;
         let customerId = req.session.user;
@@ -61,8 +76,6 @@ exports.delete = async(req, res) => {
             req.flash('error', 'Item not found');
             return res.redirect('/profile/mycart');
         }
-        
-        let price = item.price;
         
         let order = await Order.findOne({customerId: customerId});
         if (!order) {
@@ -89,11 +102,24 @@ exports.delete = async(req, res) => {
             await order.save();
         }
         
-        return res.redirect('/profile/mycart');
+        // Check if it's an AJAX request
+        const isAjax = req.get('Content-Type') === 'application/json';
+        
+        if (isAjax) {
+            return res.status(200).json({ success: true });
+        } else {
+            // For regular form submissions, redirect to cart
+            req.flash('success', 'Item removed from cart!');
+            return res.redirect('/profile/mycart');
+        }
     } catch(err) {
         console.error('Error removing from cart:', err);
-        req.flash('error', 'Error removing item from cart');
-        return res.redirect('/profile/mycart');
+        if (req.get('Content-Type') === 'application/json') {
+            return res.status(500).json({ success: false, error: err.message });
+        } else {
+            req.flash('error', 'Error removing item from cart');
+            return res.redirect('/profile/mycart');
+        }
     }
 };
 

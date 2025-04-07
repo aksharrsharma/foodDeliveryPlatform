@@ -55,9 +55,11 @@
 .item-buttons {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
-    margin-left: 15rem;
     margin-top: 2rem;
+    width: 100%;
+    margin-left: 0; /* Remove any left margin */
 }
 
 .item-buttons button {
@@ -72,8 +74,8 @@
     background-color: #007bff;
 }
 
-.delete-button{
-    background-color: red;
+.delete-button {
+    background-color: #dc3545;
 }
 
 .back-button {
