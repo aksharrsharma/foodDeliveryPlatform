@@ -24,7 +24,7 @@
                         <form action='/items/<%=item._id%>/orders' method='POST'>
                             <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                         </form>
-                        <form action="/items/<%=item._id%>/orders?_method=DELETE" method="POST" class="delete-button">
+                        <form action="/items/<%=item._id%>/orders?_method=DELETE" method="POST">
                             <button class="delete-button"><i class="fas fa-trash-alt"></i> Delete from Cart</button>
                         </form>
                     <% } else { %>

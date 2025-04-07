@@ -1,10 +1,13 @@
 const Item = require('../models/item');
-const Order = require('../models/order'); // import the item model
+const Order = require('../models/order');
 
 exports.new = async(req, res) => {
     try {
         let itemId = req.params.id;
         let customerId = req.session.user;
+        
+        // Get quantity from request body or default to 1
+        let quantity = req.body.quantity ? parseInt(req.body.quantity) : 1;
         
         let item = await Item.findById(itemId);
         if (!item) {
@@ -19,8 +22,8 @@ exports.new = async(req, res) => {
             // Create new order if none exists
             order = new Order({
                 customerId,
-                items: [{itemId, quantity: 1}],
-                totalPrice: price  
+                items: [{itemId, quantity: quantity}],
+                totalPrice: price * quantity  
             });
         } else {
             // Check if item already exists in order
@@ -30,10 +33,10 @@ exports.new = async(req, res) => {
             
             if (existingItemIndex > -1) {
                 // Update quantity if item exists
-                order.items[existingItemIndex].quantity += 1;
+                order.items[existingItemIndex].quantity += quantity;
             } else {
                 // Add new item if it doesn't exist
-                order.items.push({itemId, quantity: 1});
+                order.items.push({itemId, quantity: quantity});
             }
             
             // Recalculate total price
@@ -41,11 +44,10 @@ exports.new = async(req, res) => {
         }
         
         await order.save();
-        return res.redirect('/profile/mycart');
+        return res.status(200).json({ success: true });
     } catch(err) {
         console.error('Error adding to cart:', err);
-        req.flash('error', 'Error adding item to cart');
-        return res.redirect('/items');
+        return res.status(500).json({ success: false, error: err.message });
     }
 };
 

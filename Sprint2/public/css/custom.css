@@ -641,7 +641,7 @@ button:focus {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .item-buttons form {
@@ -689,6 +689,7 @@ form .delete-button,
 .delete-button button {
   background-color: #dc3545;
   color: white;
+  font-weight: 500;
   border: none;
   border-radius: 50px !important;
   padding: 0.8rem 1.5rem;
