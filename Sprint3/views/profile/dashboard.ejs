@@ -1,0 +1,38 @@
+<%- include('../partials/header.ejs')%>
+<link rel="stylesheet" type="text/css" href="/css/items.css">
+<% function formatDate(date) {
+    const d = new Date(date);
+    const pad = n => n.toString().padStart(2, '0');
+    return `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()}`;
+} %>
+
+<main>
+    <div class="menu-header">
+        <h2>Dashboard</h2>
+    </div>
+
+   
+
+    <!-- <div class="grid-container-products"> -->
+        <h2>Total sales: <%=sum%></h2> 
+
+        <% for (let id in itemSales) { %>
+            <h2><%= itemSales[id].name %></h2>
+            <p>Quantity Sold: <%= itemSales[id].totalQuantity %></p>
+          <% } %>
+
+        <br><br>
+        <h1>Purchases</h1>
+        <% for (let id in purchases) { %>
+        <h2><%= purchases[id].name %></h2>
+        <p>Total purchases: $<%= purchases[id].totalSpent %></p>
+        <% } %>
+          
+        
+
+
+     
+    </div>
+</main>
+
+<%- include('../partials/footer.ejs')%>

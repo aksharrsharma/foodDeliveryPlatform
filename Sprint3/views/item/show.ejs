@@ -1,0 +1,41 @@
+<%- include('../partials/header.ejs')%>
+<link rel="stylesheet" type="text/css" href="/css/show.css">
+
+<main>
+    <div class="parent">
+        <div class="item-container">
+            <img class="item-image" src="<%=item.image%>" alt="<%= item.name %>">
+            
+            <div class="item-details">
+                <h1 class="name"><%= item.name %></h1>
+                <p class="condition"><%= item.description %></p>
+                <h2 class="price">$<%= parseFloat(item.price).toFixed(2) %></h2>
+                
+                <div class="item-buttons">
+                    <% if(isAdmin) { %>
+                        <form action="/items/<%=item._id%>/edit" method="GET">
+                            <button class="edit-button"><i class="fas fa-edit"></i> Edit</button>
+                        </form>
+                        
+                        <form action="/items/<%=item._id%>?_method=DELETE" method="POST">
+                            <button class="delete-button"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </form>
+                    <% } else if(user) { %>
+                        <form action='/items/<%=item._id%>/orders' method='POST'>
+                            <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                        </form>
+                        <form action="/items/<%=item._id%>/orders?_method=DELETE" method="POST" class="delete-button">
+                            <button class="delete-button"><i class="fas fa-trash-alt"></i> Delete from Cart</button>
+                        </form>
+                    <% } else { %>
+                        <a href="/users/login" class="login-prompt">Log in to order this item</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <a href="/items" class="back-button"><i class="fas fa-arrow-left"></i> Back to Menu</a>
+    </div>
+</main>
+
+<%- include('../partials/footer.ejs')%>

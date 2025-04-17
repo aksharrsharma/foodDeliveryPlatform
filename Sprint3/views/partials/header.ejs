@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver Spoon Restaurant</title>
+    <!-- Global CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <!-- Error styles for flash messages -->
+    <link rel="stylesheet" type="text/css" href="/css/error.css">
+    <!-- Footer styles -->
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="topnav">
+            <div class="links">
+                <a href="/" class="logo">
+                    <h1><i class="fas fa-utensils"></i> Silver Spoon</h1>
+                </a>
+                <ul>
+                    <li><a href="/items"><i class="fas fa-book-open"></i> Menu</a></li>
+                    <% if(!user){ %>
+                        <li><a href="/users/new"><i class="fas fa-user-plus"></i> Sign up</a></li>
+                        <li><a href="/users/login"><i class="fas fa-sign-in-alt"></i> Log in</a></li>
+                    <% } else{ %>
+                        <li><a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+                        <% if(isAdmin){ %>
+                            <li><a href="/items/new"><i class="fas fa-plus-circle"></i> Add Menu Item</a></li>
+                            <li><a href="/profile/transactions"><i class="fas fa-shopping-cart"></i> View Transactions</a></li>
+                            <li><a href="/profile/dashboard"><i class="fas fa-shopping-cart"></i> Dashboard</a></li>
+
+                        <% } else { %>
+                            <li><a href="/profile/mycart"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
+                            <li><a href="/profile/receipt"><i class="fas fa-shopping-cart"></i> My Receipts</a></li>
+                            
+                        <% } %>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Flash Messages -->
+    <% if(errorMessages.length > 0){ 
+        errorMessages.forEach(message=>{ %>
+            <div class="error"><i class="fas fa-exclamation-circle"></i> <%= message %></div>
+        <% });
+    } %>
+
+    <% if(successMessages.length > 0){ 
+        successMessages.forEach(message=>{ %>
+            <div class="success"><i class="fas fa-check-circle"></i> <%= message %></div>
+        <% });
+    } %>
