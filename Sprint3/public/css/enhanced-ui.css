@@ -1051,7 +1051,7 @@
       align-items: flex-end;
       gap: 0.5rem;
     }
-    
+
     /* Collapsible elements styling */
     .collapsible {
         background-color: var(--primary-color);

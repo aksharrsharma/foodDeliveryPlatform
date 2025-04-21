@@ -1,96 +1,77 @@
 /**
- * Enhanced Collapsible Components for Silver Spoon Restaurant
- * 
- * This script improves the collapsible elements on the receipt and transaction pages
- * by adding smooth animations, visual indicators, and improved UX.
+ * Fix for Transaction Details in Silver Spoon Admin Dashboard
+ * This script adds direct event listeners to transaction items
  */
 
+// Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all collapsible elements
-    initCollapsibles();
-    
-    // Initialize transaction details toggles
-    initTransactionDetails();
-});
+  console.log('DOM loaded - applying transaction details fix');
   
-/**
- * Initialize collapsible elements with improved animation and styling
- */
-function initCollapsibles() {
-    const collapsibles = document.querySelectorAll('.collapsible');
+  // Get all transaction items
+  const transactionItems = document.querySelectorAll('.transaction-item');
+  console.log('Found transaction items:', transactionItems.length);
+  
+  // Add click handlers to each transaction item
+  transactionItems.forEach(item => {
+    const header = item.querySelector('.transaction-header');
+    const details = item.querySelector('.transaction-details');
     
-    collapsibles.forEach(collapsible => {
-        // Add click event listener
-        collapsible.addEventListener('click', function(e) {
-            // Prevent event bubbling to avoid conflicts
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Toggle active class
-            this.classList.toggle('active');
-            
-            const content = this.nextElementSibling;
-            
-            if (content && content.classList.contains('content')) {
-                // If content is already open, close it
-                if (content.classList.contains('active')) {
-                    content.classList.remove('active');
-                    content.style.maxHeight = null;
-                } else {
-                    // Otherwise, open it
-                    content.classList.add('active');
-                    content.style.maxHeight = content.scrollHeight + "px";
-                }
+    if (header && details) {
+      // Log that we found a valid transaction item
+      console.log('Setting up transaction item:', item.querySelector('.transaction-id')?.textContent);
+      
+      // Add click handler to the header
+      header.addEventListener('click', function(e) {
+        console.log('Transaction header clicked');
+        e.preventDefault();
+        
+        // Toggle active class on details element
+        const isActive = details.classList.toggle('active');
+        
+        // Update header active state
+        header.classList.toggle('active', isActive);
+        
+        // Apply inline styles for animation
+        if (isActive) {
+          console.log('Opening transaction details');
+          // Force layout reflow to get accurate scrollHeight
+          details.style.display = 'block';
+          details.style.height = 'auto';
+          const height = details.scrollHeight;
+          details.style.height = '0';
+          
+          // Set timeout to trigger animation
+          setTimeout(() => {
+            details.style.height = height + 'px';
+            details.style.padding = '1.5rem';
+            details.style.opacity = '1';
+          }, 10);
+        } else {
+          console.log('Closing transaction details');
+          details.style.height = '0';
+          details.style.padding = '0';
+          details.style.opacity = '0';
+          
+          // Clean up styles after animation completes
+          setTimeout(() => {
+            if (!details.classList.contains('active')) {
+              details.style.display = 'none';
             }
-        });
-    });
-}
-  
-/**
- * Update cart item through AJAX request
- */
-function updateCartItem(itemId, action) {
-    const url = action === 'increase' 
-        ? `/items/${itemId}/orders` 
-        : `/items/${itemId}/orders?_method=DELETE`;
-    
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
+          }, 300);
         }
-    })
-    .catch(error => {
-        console.error('Error updating cart:', error);
-    });
-}
+      });
+      
+      // Initialize details to be hidden
+      details.style.display = 'none';
+      details.style.height = '0';
+      details.style.opacity = '0';
+      details.style.overflow = 'hidden';
+      details.style.transition = 'height 0.3s ease, opacity 0.3s ease, padding 0.3s ease';
+    }
+  });
   
-/**
- * Initialize transaction details toggles for admin pages
- */
-function initTransactionDetails() {
-    const transactionHeaders = document.querySelectorAll('.transaction-header');
-    
-    transactionHeaders.forEach(header => {
-        header.addEventListener('click', function(e) {
-            // Prevent event bubbling to avoid conflicts
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const details = this.nextElementSibling;
-            if (!details) return;
-            
-            // Toggle active class
-            this.classList.toggle('active');
-            
-            // Toggle details visibility
-            if (details.classList.contains('active')) {
-                details.classList.remove('active');
-                details.style.maxHeight = null;
-            } else {
-                details.classList.add('active');
-                details.style.maxHeight = details.scrollHeight + "px";
-            }
-        });
-    });
-}
+  // Add console log to help diagnose issues
+  if (transactionItems.length === 0) {
+    console.warn('No transaction items found on the page. Check your HTML structure.');
+  }
+});
