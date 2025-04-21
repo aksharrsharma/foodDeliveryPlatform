@@ -21,15 +21,10 @@
                             
                             <div class="item-details">
                                 <h3><%= item.itemId.name %></h3>
-                                <p class="item-description"><%= item.itemId.description && item.itemId.description.length > 100 ? 
-                                    item.itemId.description.substring(0, 100) + '...' : 
-                                    item.itemId.description || 'No description available' %></p>
                             </div>
                             
                             <div class="item-quantity">
-                                <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
                                 <span class="quantity-value"><%= item.quantity || 1 %></span>
-                                <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
                             </div>
                             
                             <div class="item-price">
