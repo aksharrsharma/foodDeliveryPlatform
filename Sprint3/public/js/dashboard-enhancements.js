@@ -12,28 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
   /**
-   * Initialize transaction filters and sorting functionality
+   * Initialize transaction sorting functionality
    */
-  function initTransactionFilters() {
-    const filterSelect = document.getElementById('transactionFilter');
+  function initTransactionSorting() {
     const sortSelect = document.getElementById('transactionSort');
     const transactionItems = document.querySelectorAll('.transaction-item');
     
-    if (!filterSelect || !sortSelect || transactionItems.length === 0) return;
-    
-    // Filter transactions
-    filterSelect.addEventListener('change', function() {
-      const filterValue = this.value;
-      
-      transactionItems.forEach(item => {
-        if (filterValue === 'all') {
-          item.style.display = '';
-        } else {
-          const status = item.dataset.status;
-          item.style.display = status === filterValue ? '' : 'none';
-        }
-      });
-    });
+    if (!sortSelect || transactionItems.length === 0) return;
     
     // Sort transactions
     sortSelect.addEventListener('change', function() {
@@ -81,9 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
     
-    // Initialize transaction filters and sorting if on the transactions page
+    // Initialize transaction sorting if on the transactions page
     if (document.querySelector('.transactions-container')) {
-      initTransactionFilters();
+      initTransactionSorting();
     }
     
     // Add hover effects to all sales cards

@@ -8,15 +8,6 @@
         
         <div class="transaction-filters">
             <div class="filter-group">
-                <select id="transactionFilter" class="filter-select">
-                    <option value="all">All Transactions</option>
-                    <option value="completed">Completed</option>
-                    <option value="pending">Pending</option>
-                    <option value="canceled">Canceled</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
                 <span class="filter-label">Sort by:</span>
                 <select id="transactionSort" class="filter-select">
                     <option value="date-new">Date (Newest First)</option>
@@ -53,7 +44,6 @@
                 <% order.forEach(orderItem => { %>
                     <% if(orderItem.totalPrice && parseFloat(orderItem.totalPrice) > 0 && orderItem.customerId && orderItem.items && orderItem.items.length > 0) { %>
                         <div class="transaction-item" 
-                             data-status="<%= orderItem.status %>" 
                              data-date="<%= orderItem.updatedAt %>" 
                              data-amount="<%= orderItem.totalPrice %>">
                             <div class="transaction-header">
@@ -77,9 +67,8 @@
                                     <div class="transaction-amount">
                                         <i class="fas fa-tag"></i> $<%= parseFloat(orderItem.totalPrice).toFixed(2) %>
                                     </div>
-                                    <span class="badge badge-<%= orderItem.status === 'completed' ? 'success' : 
-                                                               orderItem.status === 'pending' ? 'warning' : 'danger' %>">
-                                        <%= orderItem.status.charAt(0).toUpperCase() + orderItem.status.slice(1) %>
+                                    <span class="badge badge-success">
+                                        Completed
                                     </span>
                                 </div>
                             </div>
@@ -125,16 +114,6 @@
                                         <span class="summary-label">Total:</span>
                                         <span class="summary-value">$<%= parseFloat(orderItem.totalPrice + tax).toFixed(2) %></span>
                                     </div>
-                                </div>
-                                
-                                <div class="transaction-actions">
-                                    <% if(orderItem.status === 'pending') { %>
-                                        <form action="/admin/orders/<%= orderItem._id %>/complete" method="POST" style="display: inline;">
-                                            <button type="submit" class="btn btn-success">
-                                                <i class="fas fa-check"></i> Mark Completed
-                                            </button>
-                                        </form>
-                                    <% } %>
                                 </div>
                             </div>
                         </div>
