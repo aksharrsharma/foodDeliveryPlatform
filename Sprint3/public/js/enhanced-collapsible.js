@@ -21,29 +21,29 @@ function initCollapsibles() {
     
     collapsibles.forEach(collapsible => {
         // Add click event listener
-        collapsible.addEventListener('click', function() {
+        collapsible.addEventListener('click', function(e) {
+            // Prevent event bubbling to avoid conflicts
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle active class
             this.classList.toggle('active');
             
             const content = this.nextElementSibling;
             
-            if (content.classList.contains('content')) {
-                if (content.style.maxHeight) {
+            if (content && content.classList.contains('content')) {
+                // If content is already open, close it
+                if (content.classList.contains('active')) {
+                    content.classList.remove('active');
                     content.style.maxHeight = null;
-                    setTimeout(() => content.classList.remove('active'), 300);
                 } else {
+                    // Otherwise, open it
                     content.classList.add('active');
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
             }
         });
     });
-    
-    // Open the first collapsible by default (optional)
-    if (collapsibles.length > 0) {
-        // Uncomment the next two lines if you want the first item expanded by default
-        // collapsibles[0].classList.add('active');
-        // collapsibles[0].nextElementSibling.style.maxHeight = collapsibles[0].nextElementSibling.scrollHeight + "px";
-    }
 }
   
 /**
@@ -72,15 +72,21 @@ function initTransactionDetails() {
     const transactionHeaders = document.querySelectorAll('.transaction-header');
     
     transactionHeaders.forEach(header => {
-        header.addEventListener('click', function() {
+        header.addEventListener('click', function(e) {
+            // Prevent event bubbling to avoid conflicts
+            e.preventDefault();
+            e.stopPropagation();
+            
             const details = this.nextElementSibling;
             if (!details) return;
             
+            // Toggle active class
             this.classList.toggle('active');
             
-            if (details.style.maxHeight) {
+            // Toggle details visibility
+            if (details.classList.contains('active')) {
+                details.classList.remove('active');
                 details.style.maxHeight = null;
-                setTimeout(() => details.classList.remove('active'), 300);
             } else {
                 details.classList.add('active');
                 details.style.maxHeight = details.scrollHeight + "px";
