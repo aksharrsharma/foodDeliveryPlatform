@@ -6,13 +6,12 @@
     <div class="cart-container">
         <h2 class="cart-title"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
         
-        <% if (order && order.length > 0 && order[0].items && order[0].items.length > 0 
-               && parseFloat(order[0].totalPrice).toFixed(2) !== "0.00") { %>
+        <% if (order && order.length > 0 && order[0].items && order[0].items.length > 0) { %>
             <div class="cart-items">
                 <% let total = parseFloat(order[0].totalPrice) || 0; %>
                 
                 <% order[0].items.forEach(item => { %>
-                    <% if(item.itemId) { %>
+                    <% if(item.itemId && item.itemId._id) { %>
                         <div class="cart-item" data-item-id="<%= item.itemId._id %>">
                             <div class="item-image">
                                 <a href="/items/<%= item.itemId._id %>">
@@ -93,7 +92,7 @@
     </div>
 </main>
 
-<!-- Include the enhanced collapsible JS -->
-<script src="/js/enhanced-collapsible.js"></script>
+<!-- Include cart functionality JS file -->
+<script src="/js/cart-quantity.js"></script>
 
 <%- include('../partials/footer.ejs')%>

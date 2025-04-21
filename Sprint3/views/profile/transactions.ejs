@@ -46,12 +46,13 @@
                 }
                 
                 function capitalizeWords(str) {
+                    if (!str) return '';
                     return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
                 }
                 %>
                 
                 <% order.forEach(orderItem => { %>
-                    <% if(parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
+                    <% if(orderItem.totalPrice && parseFloat(orderItem.totalPrice) > 0 && orderItem.customerId && orderItem.items && orderItem.items.length > 0) { %>
                         <div class="transaction-item" 
                              data-status="<%= orderItem.status %>" 
                              data-date="<%= orderItem.updatedAt %>" 
@@ -63,7 +64,8 @@
                                     </div>
                                     <div class="customer-info">
                                         <div class="customer-name">
-                                            <%= capitalizeWords(orderItem.customerId.firstName) %> <%= capitalizeWords(orderItem.customerId.lastName) %>
+                                            <%= orderItem.customerId.firstName ? capitalizeWords(orderItem.customerId.firstName) : 'Customer' %> 
+                                            <%= orderItem.customerId.lastName ? capitalizeWords(orderItem.customerId.lastName) : '' %>
                                         </div>
                                         <div class="transaction-id">Order #<%= orderItem._id.toString().substr(-6) %></div>
                                     </div>
@@ -86,17 +88,17 @@
                             <div class="transaction-details">
                                 <div class="transaction-products">
                                     <% orderItem.items.forEach(item => { %>
-                                        <% if(item.itemId) { %>
+                                        <% if(item.itemId && item.itemId.name) { %>
                                             <div class="transaction-product">
                                                 <div class="product-details">
                                                     <div class="product-image">
-                                                        <img src="<%= item.itemId.image %>" alt="<%= item.itemId.name %>">
+                                                        <img src="<%= item.itemId.image || '/images/plate2.png' %>" alt="<%= item.itemId.name %>">
                                                     </div>
                                                     <div class="product-info">
                                                         <h4><%= capitalizeWords(item.itemId.name) %></h4>
-                                                        <p><%= item.itemId.description.length > 60 ? 
+                                                        <p><%= item.itemId.description ? (item.itemId.description.length > 60 ? 
                                                             item.itemId.description.substring(0, 60) + '...' : 
-                                                            item.itemId.description %></p>
+                                                            item.itemId.description) : 'No description available' %></p>
                                                     </div>
                                                 </div>
                                                 
@@ -145,15 +147,6 @@
                         </div>
                     <% } %>
                 <% }) %>
-            </div>
-            
-            <!-- Simple pagination -->
-            <div class="pagination">
-                <span class="pagination-item"><i class="fas fa-chevron-left"></i></span>
-                <span class="pagination-item active">1</span>
-                <span class="pagination-item">2</span>
-                <span class="pagination-item">3</span>
-                <span class="pagination-item"><i class="fas fa-chevron-right"></i></span>
             </div>
         <% } else { %>
             <div class="empty-state">

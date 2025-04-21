@@ -23,21 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const collapsibles = document.querySelectorAll('.collapsible');
     
     collapsibles.forEach(collapsible => {
-      // Set initial state (first item open by default if desired)
-      const content = collapsible.nextElementSibling;
-      
       // Add click event listener
       collapsible.addEventListener('click', function() {
         this.classList.toggle('active');
         
         const content = this.nextElementSibling;
         
-        if (content.style.maxHeight) {
-          content.style.maxHeight = null;
+        if (content.classList.contains('active')) {
           content.classList.remove('active');
+          content.style.maxHeight = null;
         } else {
-          content.style.maxHeight = content.scrollHeight + "px";
           content.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + "px";
         }
       });
     });
@@ -173,26 +170,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const details = this.nextElementSibling;
         if (!details) return;
         
-        const isActive = details.classList.contains('active');
-        
-        // Close all other open transaction details
-        document.querySelectorAll('.transaction-details.active').forEach(item => {
-          if (item !== details) {
-            item.style.maxHeight = null;
-            item.classList.remove('active');
-            
-            const header = item.previousElementSibling;
-            if (header) {
-              header.classList.remove('active');
-            }
-          }
-        });
-        
-        // Toggle current transaction details
         this.classList.toggle('active');
         details.classList.toggle('active');
         
-        if (!isActive) {
+        if (details.classList.contains('active')) {
           details.style.maxHeight = details.scrollHeight + "px";
         } else {
           details.style.maxHeight = null;

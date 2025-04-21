@@ -11,6 +11,76 @@ document.addEventListener('DOMContentLoaded', function() {
       initDashboardCharts();
     }
     
+  /**
+   * Initialize transaction filters and sorting functionality
+   */
+  function initTransactionFilters() {
+    const filterSelect = document.getElementById('transactionFilter');
+    const sortSelect = document.getElementById('transactionSort');
+    const transactionItems = document.querySelectorAll('.transaction-item');
+    
+    if (!filterSelect || !sortSelect || transactionItems.length === 0) return;
+    
+    // Filter transactions
+    filterSelect.addEventListener('change', function() {
+      const filterValue = this.value;
+      
+      transactionItems.forEach(item => {
+        if (filterValue === 'all') {
+          item.style.display = '';
+        } else {
+          const status = item.dataset.status;
+          item.style.display = status === filterValue ? '' : 'none';
+        }
+      });
+    });
+    
+    // Sort transactions
+    sortSelect.addEventListener('change', function() {
+      const sortValue = this.value;
+      const transactionContainer = document.querySelector('.transaction-list');
+      
+      const itemsArray = Array.from(transactionItems);
+      
+      itemsArray.sort((a, b) => {
+        if (sortValue === 'date-new') {
+          return new Date(b.dataset.date) - new Date(a.dataset.date);
+        } else if (sortValue === 'date-old') {
+          return new Date(a.dataset.date) - new Date(b.dataset.date);
+        } else if (sortValue === 'amount-high') {
+          return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
+        } else if (sortValue === 'amount-low') {
+          return parseFloat(a.dataset.amount) - parseFloat(b.dataset.amount);
+        }
+        return 0;
+      });
+      
+      // Re-append sorted items
+      itemsArray.forEach(item => {
+        transactionContainer.appendChild(item);
+      });
+    });
+  }
+  
+  /**
+   * Add interactive effects to sales cards
+   */
+  function initSalesCardEffects() {
+    const salesCards = document.querySelectorAll('.item-sales-card');
+    
+    salesCards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        // Add highlight class
+        this.classList.add('highlight');
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        // Remove highlight class
+        this.classList.remove('highlight');
+      });
+    });
+  }
+    
     // Initialize transaction filters and sorting if on the transactions page
     if (document.querySelector('.transactions-container')) {
       initTransactionFilters();
@@ -75,7 +145,11 @@ document.addEventListener('DOMContentLoaded', function() {
           },
           scales: {
             y: {
-              beginAtZero: true
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                precision: 0
+              }
             }
           }
         }
@@ -129,138 +203,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
-  }
-  
-  /**
-   * Initialize transaction filters and sorting functionality
-   */
-  function initTransactionFilters() {
-    const filterSelect = document.getElementById('transactionFilter');
-    const sortSelect = document.getElementById('transactionSort');
-    const transactionItems = document.querySelectorAll('.transaction-item');
-    
-    if (!filterSelect || !sortSelect || transactionItems.length === 0) return;
-    
-    // Filter transactions
-    filterSelect.addEventListener('change', function() {
-      const filterValue = this.value;
-      
-      transactionItems.forEach(item => {
-        if (filterValue === 'all') {
-          item.style.display = '';
-        } else {
-          const status = item.dataset.status;
-          item.style.display = status === filterValue ? '' : 'none';
-        }
-      });
-    });
-    
-    // Sort transactions
-    sortSelect.addEventListener('change', function() {
-      const sortValue = this.value;
-      const transactionContainer = document.querySelector('.transaction-list');
-      
-      const itemsArray = Array.from(transactionItems);
-      
-      itemsArray.sort((a, b) => {
-        if (sortValue === 'date-new') {
-          return new Date(b.dataset.date) - new Date(a.dataset.date);
-        } else if (sortValue === 'date-old') {
-          return new Date(a.dataset.date) - new Date(b.dataset.date);
-        } else if (sortValue === 'amount-high') {
-          return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
-        } else if (sortValue === 'amount-low') {
-          return parseFloat(a.dataset.amount) - parseFloat(b.dataset.amount);
-        }
-        return 0;
-      });
-      
-      // Re-append sorted items
-      itemsArray.forEach(item => {
-        transactionContainer.appendChild(item);
-      });
-    });
-  }
-  
-  /**
-   * Add interactive effects to sales cards
-   */
-  function initSalesCardEffects() {
-    const salesCards = document.querySelectorAll('.item-sales-card');
-    
-    salesCards.forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        // Add highlight class
-        this.classList.add('highlight');
-        
-        // Create and show quick stat popup if not already present
-        if (!this.querySelector('.quick-stats')) {
-          const quickStats = document.createElement('div');
-          quickStats.className = 'quick-stats';
-          
-          const itemName = this.querySelector('.item-sales-name').textContent;
-          const quantitySold = this.querySelector('.stat-value[data-type="quantity"]').textContent;
-          const revenue = this.querySelector('.stat-value[data-type="revenue"]').textContent;
-          
-          quickStats.innerHTML = `
-            <div class="quick-stats-header">${itemName}</div>
-            <div class="quick-stats-body">
-              <div class="quick-stat">
-                <span class="quick-stat-label">Sold</span>
-                <span class="quick-stat-value">${quantitySold}</span>
-              </div>
-              <div class="quick-stat">
-                <span class="quick-stat-label">Revenue</span>
-                <span class="quick-stat-value">${revenue}</span>
-              </div>
-            </div>
-          `;
-          
-          this.appendChild(quickStats);
-          
-          // Animate in
-          setTimeout(() => {
-            quickStats.style.opacity = '1';
-            quickStats.style.transform = 'translateY(0)';
-          }, 10);
-        }
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        // Remove highlight class
-        this.classList.remove('highlight');
-        
-        // Remove quick stat popup
-        const quickStats = this.querySelector('.quick-stats');
-        if (quickStats) {
-          quickStats.style.opacity = '0';
-          quickStats.style.transform = 'translateY(10px)';
-          
-          setTimeout(() => {
-            quickStats.remove();
-          }, 300);
-        }
-      });
-    });
-  }
-  
-  /**
-   * Function to format currency values consistently
-   */
-  function formatCurrency(value) {
-    return '$' + parseFloat(value).toFixed(2);
-  }
-  
-  /**
-   * Function to format dates in a user-friendly way
-   */
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
   }
