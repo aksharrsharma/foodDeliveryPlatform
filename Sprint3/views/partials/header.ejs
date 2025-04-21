@@ -14,6 +14,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/css/enhanced-ui.css">
     <script src="https://kit.fontawesome.com/e0dff5757e.js" crossorigin="anonymous"></script>
+    <style>
+        .topnav .links ul li.logout-button a {
+            background-color: #d9534f;
+            color: white !important;
+            padding: 8px 15px !important;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-left: 15px;
+        }
+        
+        .topnav .links ul li.logout-button a:hover {
+            background-color: #c9302c;
+            color: white !important;
+            font-weight: normal;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,17 +45,16 @@
                         <li><a href="/users/new"><i class="fas fa-user-plus"></i> Sign up</a></li>
                         <li><a href="/users/login"><i class="fas fa-sign-in-alt"></i> Log in</a></li>
                     <% } else{ %>
-                        <li><a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
                         <% if(isAdmin){ %>
                             <li><a href="/items/new"><i class="fas fa-plus-circle"></i> Add Menu Item</a></li>
                             <li><a href="/profile/transactions"><i class="fas fa-shopping-cart"></i> View Transactions</a></li>
                             <li><a href="/profile/dashboard"><i class="fas fa-shopping-cart"></i> Dashboard</a></li>
-
+                            <li class="logout-button"><a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
                         <% } else { %>
-                            <li><a href="/profile/favorites"><i class="fa-solid fa-star"></i>Favorites</a></li>
+                            <li><a href="/profile/favorites"><i class="fa-solid fa-star"></i> Favorites</a></li>
                             <li><a href="/profile/mycart"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
                             <li><a href="/profile/receipt"><i class="fas fa-shopping-cart"></i> My Receipts</a></li>
-                            
+                            <li class="logout-button"><a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
                         <% } %>
                     <% } %>
                 </ul>
