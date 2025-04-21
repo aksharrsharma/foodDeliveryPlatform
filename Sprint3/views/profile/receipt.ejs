@@ -29,7 +29,7 @@
                 %>
                 
                 <% order.forEach((orderItem, index) => { %>
-                    <% if(parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
+                    <% if(orderItem && orderItem.totalPrice && parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
                         <div class="receipt-card">
                             <button class="collapsible">
                                 <div class="receipt-date">
@@ -42,21 +42,25 @@
                             
                             <div class="content">
                                 <div class="receipt-items">
-                                    <% orderItem.items.forEach(item => { %>
-                                        <% if(item.itemId) { %>
-                                            <div class="receipt-item">
-                                                <div class="item-name-quantity">
-                                                    <span class="item-quantity-badge"><%= item.quantity %>x</span>
-                                                    <span class="item-name"><%= capitalizeWords(item.itemId.name) %></span>
+                                    <% if(orderItem.items && orderItem.items.length > 0) { %>
+                                        <% orderItem.items.forEach(item => { %>
+                                            <% if(item && item.itemId) { %>
+                                                <div class="receipt-item">
+                                                    <div class="item-name-quantity">
+                                                        <span class="item-quantity-badge"><%= item.quantity || 1 %>x</span>
+                                                        <span class="item-name">
+                                                            <%= (item.itemId.name) ? capitalizeWords(item.itemId.name) : 'Item' %>
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    <div class="receipt-item-price">
+                                                        <div class="unit-price">$<%= parseFloat(item.itemId.price || 0).toFixed(2) %> each</div>
+                                                        <div class="total-price">$<%= parseFloat((item.itemId.price || 0) * (item.quantity || 1)).toFixed(2) %></div>
+                                                    </div>
                                                 </div>
-                                                
-                                                <div class="receipt-item-price">
-                                                    <div class="unit-price">$<%= parseFloat(item.itemId.price).toFixed(2) %> each</div>
-                                                    <div class="total-price">$<%= parseFloat(item.itemId.price * item.quantity).toFixed(2) %></div>
-                                                </div>
-                                            </div>
-                                        <% } %>
-                                    <% }) %>
+                                            <% } %>
+                                        <% }) %>
+                                    <% } %>
                                 </div>
                                 
                                 <div class="receipt-footer">

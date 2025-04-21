@@ -6,12 +6,12 @@
     <div class="cart-container">
         <h2 class="cart-title"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
         
-        <% if (order && order.length > 0 && order[0].items && order[0].items.length > 0) { %>
+        <% if (order && order.length > 0 && order[0] && order[0].items && order[0].items.length > 0) { %>
             <div class="cart-items">
                 <% let total = parseFloat(order[0].totalPrice) || 0; %>
                 
                 <% order[0].items.forEach(item => { %>
-                    <% if(item.itemId && item.itemId._id) { %>
+                    <% if(item && item.itemId && typeof item.itemId === 'object' && item.itemId._id) { %>
                         <div class="cart-item" data-item-id="<%= item.itemId._id %>">
                             <div class="item-image">
                                 <a href="/items/<%= item.itemId._id %>">
@@ -21,23 +21,23 @@
                             
                             <div class="item-details">
                                 <h3><%= item.itemId.name %></h3>
-                                <p class="item-description"><%= item.itemId.description.length > 100 ? 
+                                <p class="item-description"><%= item.itemId.description && item.itemId.description.length > 100 ? 
                                     item.itemId.description.substring(0, 100) + '...' : 
-                                    item.itemId.description %></p>
+                                    item.itemId.description || 'No description available' %></p>
                             </div>
                             
                             <div class="item-quantity">
                                 <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
-                                <span class="quantity-value"><%= item.quantity %></span>
+                                <span class="quantity-value"><%= item.quantity || 1 %></span>
                                 <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
                             </div>
                             
                             <div class="item-price">
-                                $<%= parseFloat(item.itemId.price).toFixed(2) %>
+                                $<%= parseFloat(item.itemId.price || 0).toFixed(2) %>
                             </div>
                             
                             <div class="item-subtotal">
-                                $<%= parseFloat(item.itemId.price * item.quantity).toFixed(2) %>
+                                $<%= parseFloat((item.itemId.price || 0) * (item.quantity || 1)).toFixed(2) %>
                             </div>
                             
                             <div class="item-remove">

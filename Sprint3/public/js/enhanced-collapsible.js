@@ -9,175 +9,82 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize all collapsible elements
     initCollapsibles();
     
-    // Initialize the cart quantity buttons if they exist
-    initCartQuantityButtons();
-    
     // Initialize transaction details toggles
     initTransactionDetails();
-  });
+});
   
-  /**
-   * Initialize collapsible elements with improved animation and styling
-   */
-  function initCollapsibles() {
+/**
+ * Initialize collapsible elements with improved animation and styling
+ */
+function initCollapsibles() {
     const collapsibles = document.querySelectorAll('.collapsible');
     
     collapsibles.forEach(collapsible => {
-      // Add click event listener
-      collapsible.addEventListener('click', function() {
-        this.classList.toggle('active');
-        
-        const content = this.nextElementSibling;
-        
-        if (content.classList.contains('active')) {
-          content.classList.remove('active');
-          content.style.maxHeight = null;
-        } else {
-          content.classList.add('active');
-          content.style.maxHeight = content.scrollHeight + "px";
-        }
-      });
-    });
-  }
-  
-  /**
-   * Initialize cart quantity buttons
-   */
-  function initCartQuantityButtons() {
-    const decreaseButtons = document.querySelectorAll('.quantity-btn.decrease');
-    const increaseButtons = document.querySelectorAll('.quantity-btn.increase');
-    
-    if (!decreaseButtons.length && !increaseButtons.length) return;
-    
-    // Decrease quantity
-    decreaseButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const cartItem = this.closest('.cart-item');
-        if (!cartItem) return;
-        
-        const itemId = cartItem.dataset.itemId;
-        const quantityElement = this.nextElementSibling;
-        if (!quantityElement) return;
-        
-        let quantity = parseInt(quantityElement.textContent);
-        
-        if (quantity > 1) {
-          quantity--;
-          quantityElement.textContent = quantity;
-          updateSubtotal(cartItem, quantity);
-          updateCartTotal();
-          
-          // Send AJAX request to update cart
-          if (itemId) {
-            updateCartItem(itemId, 'decrease');
-          }
-        }
-      });
+        // Add click event listener
+        collapsible.addEventListener('click', function() {
+            this.classList.toggle('active');
+            
+            const content = this.nextElementSibling;
+            
+            if (content.classList.contains('content')) {
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    setTimeout(() => content.classList.remove('active'), 300);
+                } else {
+                    content.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            }
+        });
     });
     
-    // Increase quantity
-    increaseButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const cartItem = this.closest('.cart-item');
-        if (!cartItem) return;
-        
-        const itemId = cartItem.dataset.itemId;
-        const quantityElement = this.previousElementSibling;
-        if (!quantityElement) return;
-        
-        let quantity = parseInt(quantityElement.textContent);
-        
-        quantity++;
-        quantityElement.textContent = quantity;
-        updateSubtotal(cartItem, quantity);
-        updateCartTotal();
-        
-        // Send AJAX request to update cart
-        if (itemId) {
-          updateCartItem(itemId, 'increase');
-        }
-      });
-    });
-  }
+    // Open the first collapsible by default (optional)
+    if (collapsibles.length > 0) {
+        // Uncomment the next two lines if you want the first item expanded by default
+        // collapsibles[0].classList.add('active');
+        // collapsibles[0].nextElementSibling.style.maxHeight = collapsibles[0].nextElementSibling.scrollHeight + "px";
+    }
+}
   
-  /**
-   * Update subtotal for an item
-   */
-  function updateSubtotal(cartItem, quantity) {
-    const priceElement = cartItem.querySelector('.item-price');
-    const subtotalElement = cartItem.querySelector('.item-subtotal');
-    
-    if (!priceElement || !subtotalElement) return;
-    
-    const price = parseFloat(priceElement.textContent.replace('$', ''));
-    
-    const subtotal = price * quantity;
-    subtotalElement.textContent = '$' + subtotal.toFixed(2);
-  }
-  
-  /**
-   * Update total cart amount
-   */
-  function updateCartTotal() {
-    const subtotalElements = document.querySelectorAll('.item-subtotal');
-    const subtotalDisplay = document.querySelector('.subtotal .amount');
-    const taxDisplay = document.querySelector('.tax .amount');
-    const totalDisplay = document.querySelector('.total .amount');
-    
-    if (!subtotalElements.length || !subtotalDisplay || !taxDisplay || !totalDisplay) return;
-    
-    let total = 0;
-    
-    subtotalElements.forEach(element => {
-      total += parseFloat(element.textContent.replace('$', ''));
-    });
-    
-    const tax = total * 0.08;
-    const finalTotal = total + tax;
-    
-    subtotalDisplay.textContent = '$' + total.toFixed(2);
-    taxDisplay.textContent = '$' + tax.toFixed(2);
-    totalDisplay.textContent = '$' + finalTotal.toFixed(2);
-  }
-  
-  /**
-   * Update cart item through AJAX request
-   */
-  function updateCartItem(itemId, action) {
+/**
+ * Update cart item through AJAX request
+ */
+function updateCartItem(itemId, action) {
     const url = action === 'increase' 
-      ? `/items/${itemId}/orders` 
-      : `/items/${itemId}/orders?_method=DELETE`;
+        ? `/items/${itemId}/orders` 
+        : `/items/${itemId}/orders?_method=DELETE`;
     
     fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
     .catch(error => {
-      console.error('Error updating cart:', error);
+        console.error('Error updating cart:', error);
     });
-  }
+}
   
-  /**
-   * Initialize transaction details toggles for admin pages
-   */
-  function initTransactionDetails() {
+/**
+ * Initialize transaction details toggles for admin pages
+ */
+function initTransactionDetails() {
     const transactionHeaders = document.querySelectorAll('.transaction-header');
     
     transactionHeaders.forEach(header => {
-      header.addEventListener('click', function() {
-        const details = this.nextElementSibling;
-        if (!details) return;
-        
-        this.classList.toggle('active');
-        details.classList.toggle('active');
-        
-        if (details.classList.contains('active')) {
-          details.style.maxHeight = details.scrollHeight + "px";
-        } else {
-          details.style.maxHeight = null;
-        }
-      });
+        header.addEventListener('click', function() {
+            const details = this.nextElementSibling;
+            if (!details) return;
+            
+            this.classList.toggle('active');
+            
+            if (details.style.maxHeight) {
+                details.style.maxHeight = null;
+                setTimeout(() => details.classList.remove('active'), 300);
+            } else {
+                details.classList.add('active');
+                details.style.maxHeight = details.scrollHeight + "px";
+            }
+        });
     });
-  }
+}
