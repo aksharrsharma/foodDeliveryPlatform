@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             
-                            <div class="transaction-details">
+                            <div class="transaction-content">
                                 <div class="transaction-products">
                                     <% orderItem.items.forEach(item => { %>
                                         <% if(item.itemId && item.itemId.name) { %>
@@ -157,8 +157,6 @@
     </div>
 </main>
 
-<!-- Include the enhanced collapsible JS -->
-<script src="/js/enhanced-collapsible.js"></script>
 <!-- Include the dashboard enhancements JS for transaction functionality -->
 <script src="/js/dashboard-enhancements.js"></script>
 

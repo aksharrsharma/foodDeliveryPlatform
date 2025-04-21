@@ -31,16 +31,16 @@
                 <% order.forEach((orderItem, index) => { %>
                     <% if(orderItem && orderItem.totalPrice && parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
                         <div class="receipt-card">
-                            <button class="collapsible">
+                            <div class="receipt-header">
                                 <div class="receipt-date">
                                     <i class="fas fa-calendar-alt"></i> <%= formatDate(orderItem.updatedAt) %>
                                 </div>
                                 <div class="receipt-amount">
                                     <i class="fas fa-tag"></i> $<%= parseFloat(orderItem.totalPrice).toFixed(2) %>
                                 </div>
-                            </button>
+                            </div>
                             
-                            <div class="content">
+                            <div class="receipt-content">
                                 <div class="receipt-items">
                                     <% if(orderItem.items && orderItem.items.length > 0) { %>
                                         <% orderItem.items.forEach(item => { %>
@@ -94,8 +94,5 @@
         <% } %>
     </div>
 </main>
-
-<!-- Include the enhanced collapsible JS -->
-<script src="/js/enhanced-collapsible.js"></script>
 
 <%- include('../partials/footer.ejs')%>
