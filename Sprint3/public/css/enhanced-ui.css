@@ -375,9 +375,10 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Modified to remove icons and center text */
 .cta-button {
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
+    text-align: center;
     background-color: var(--primary-color);
     color: white;
     padding: 0.9rem 2rem;
