@@ -8,7 +8,6 @@
         
         <div class="transaction-filters">
             <div class="filter-group">
-                <span class="filter-label">Filter by:</span>
                 <select id="transactionFilter" class="filter-select">
                     <option value="all">All Transactions</option>
                     <option value="completed">Completed</option>
@@ -96,9 +95,6 @@
                                                     </div>
                                                     <div class="product-info">
                                                         <h4><%= capitalizeWords(item.itemId.name) %></h4>
-                                                        <p><%= item.itemId.description ? (item.itemId.description.length > 60 ? 
-                                                            item.itemId.description.substring(0, 60) + '...' : 
-                                                            item.itemId.description) : 'No description available' %></p>
                                                     </div>
                                                 </div>
                                                 
@@ -132,9 +128,6 @@
                                 </div>
                                 
                                 <div class="transaction-actions">
-                                    <button class="btn btn-secondary print-receipt" data-order-id="<%= orderItem._id %>">
-                                        <i class="fas fa-print"></i> Print Receipt
-                                    </button>
                                     <% if(orderItem.status === 'pending') { %>
                                         <form action="/admin/orders/<%= orderItem._id %>/complete" method="POST" style="display: inline;">
                                             <button type="submit" class="btn btn-success">
