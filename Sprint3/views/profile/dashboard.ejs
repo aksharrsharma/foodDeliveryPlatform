@@ -1,10 +1,29 @@
 <%- include('../partials/header.ejs')%>
 <link rel="stylesheet" type="text/css" href="/css/items.css">
-<% function formatDate(date) {
-    const d = new Date(date);
-    const pad = n => n.toString().padStart(2, '0');
-    return `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()}`;
+
+<%
+function formatDate(dateInput) {
+    const date = new Date(dateInput);
+    const options = {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+
+    // Format using toLocaleString
+    const formatted = date.toLocaleString('en-US', options);
+    return formatted + ' EST';
+}
+%>
+
+<% function capitalizeWords(str) {
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 } %>
+
 
 <main>
     <div class="menu-header">
@@ -14,23 +33,29 @@
    
 
     <!-- <div class="grid-container-products"> -->
-        <h2>Total sales: <%=sum%></h2> 
-
         <% for (let id in itemSales) { %>
-            <h2><%= itemSales[id].name %></h2>
-            <p>Quantity Sold: <%= itemSales[id].totalQuantity %></p>
-          <% } %>
+            <h2><%= capitalizeWords(itemSales[id].name) %></h2>
+            <p>Qty sold: <%= itemSales[id].totalQuantity %></p>
+            <p>Sales price: $<%= parseFloat(itemSales[id].price).toFixed(2) %></p>
+            <p>Sales revenue:  $<%= parseFloat(itemSales[id].totalQuantity * itemSales[id].price).toFixed(2) %></p>
+          
+
+        <% } %>
+        <hr><br>
+        <h2>Sales Revenue:  $<%= parseFloat(sum).toFixed(2) %></h2> 
+        <hr>
 
         <br><br>
         <h1>Purchases</h1>
         <% for (let id in purchases) { %>
-        <h2><%= purchases[id].name %></h2>
-        <p>Total purchases: $<%= purchases[id].totalSpent %></p>
+
+            <a href="/profile/receipt"> <h2><%= capitalizeWords(purchases[id].name) %> </h2> </a>
+            <p>Latest purcase: <%= formatDate(purchases[id].date) %></p>
+            <p>Complated Transactions: <%= purchases[id].completedOrders %> </p>
+            <p>Total purchases: $<%= parseFloat(purchases[id].totalSpent).toFixed(2) %></p>
         <% } %>
           
         
-
-
      
     </div>
 </main>

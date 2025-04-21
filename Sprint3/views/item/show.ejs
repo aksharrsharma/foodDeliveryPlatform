@@ -1,13 +1,18 @@
 <%- include('../partials/header.ejs')%>
 <link rel="stylesheet" type="text/css" href="/css/show.css">
 
+<% function capitalizeWords(str) {
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+} %>
+
+
 <main>
     <div class="parent">
         <div class="item-container">
             <img class="item-image" src="<%=item.image%>" alt="<%= item.name %>">
             
             <div class="item-details">
-                <h1 class="name"><%= item.name %></h1>
+                <h1 class="name"><%= capitalizeWords(item.name) %></h1>
                 <p class="condition"><%= item.description %></p>
                 <h2 class="price">$<%= parseFloat(item.price).toFixed(2) %></h2>
                 

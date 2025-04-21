@@ -1,6 +1,10 @@
 <%- include('../partials/header.ejs')%>
 <link rel="stylesheet" type="text/css" href="/css/items.css">
 
+<% function capitalizeWords(str) {
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+} %>
+
 <main>
     <div class="menu-header">
         <h2>Today's Menu</h2>
@@ -16,7 +20,7 @@
                         <img src="<%=item.image%>" alt="<%= item.name %>">
                     </a>
                     <a href="/items/<%= item.id %>">
-                        <h3 class="name"><%= item.name %></h3>
+                        <h3 class="name"><%= capitalizeWords(item.name) %></h3>
                     </a>
                     <p class="condition"><%= item.description %></p>
                     <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>
@@ -24,9 +28,13 @@
                         <form action='/items/<%=item._id%>/orders' method='POST'>
                             <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                         </form>
-                        <!-- <form action="/items/<%=item._id%>/orders?_method=DELETE" method="POST">
-                            <button class="delete-button"><i class="fas fa-trash-alt"></i> Delete from Cart</button>
-                        </form> -->
+
+                        <% if (!favoritedIds.includes(item._id.toString())) { %>
+                            <form action="/items/<%=item._id%>/favorites" method="POST">
+                                <button class=""><i class="fa-solid fa-star"></i></button>
+                            </form>
+                        <%}%>
+                        
                     <% } %>
                 </div>
             <% }); %>

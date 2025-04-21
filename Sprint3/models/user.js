@@ -7,6 +7,7 @@ const userSchema = new Schema ({
     lastName: {type: String, required: [true, 'cannot be empty']},
     email: {type: String, required: [true, 'cannot be empty'], unique: true},
     password: {type: String, required: [true, 'cannot be empty']},
+    favorites: [{dishId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true }}],
     admin: {type: String, default:"notAdmin"}
 });
 

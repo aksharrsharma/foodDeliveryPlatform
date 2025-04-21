@@ -1,13 +1,19 @@
 const Item = require('../models/item'); // import the item Item
 const Order = require('../models/order'); // import the item Item
+const User = require('../models/user'); // import the item model
+
 
 //GET /items: send all items to user 
-exports.index = (req, res) =>{
-    Item.find().sort({price: 1})
-    .then(items=>{
-        res.render('./item/items', {items});
-    })
-    .catch(err=>next(err));
+exports.index = async (req, res) =>{
+    const items = await Item.find().sort({ price: 1 });
+
+    let favoritedIds = [];
+    if (req.session.user) {
+        const user = await User.findById(req.session.user);
+        favoritedIds = user.favorites.map(f => f.dishId.toString());
+    }
+
+    res.render('./item/items', {items, favoritedIds});
 
 };
 
@@ -108,18 +114,84 @@ exports.update = (req, res)=>{
     });
 };
 
-//DELETE /items/:id: send details of an item identified by id
-exports.delete = (req, res)=>{
+//DELETE /items/:id: delete item from database (admin)
+exports.delete = async (req, res, next)=>{
     let id = req.params.id;
-    Item.deleteMany({item: id})
-    .then(()=>{
-        return Item.findByIdAndDelete(id, {useFindAndModify: false})
-    })
-    .then(item=>{
-        req.flash('success', 'Your item was deleted successfully!');
-        req.session.save(()=>res.redirect('/items'));
-    })
-    .catch(err=>next(err));
+    try{
+        await Item.deleteMany({item: id})
+        await Order.deleteMany({ "items.itemId": id });
+        await Item.findByIdAndDelete(id);
+        req.flash('success', 'Your item and its related orders were deleted successfully!');
+        req.session.save(() => res.redirect('/items'));
+    } catch (err){
+        console.log(err);
+        next(err);
+    }
+
+
+    // Item.deleteMany({item: id})
+    // .then(()=>{
+    //     return Item.findByIdAndDelete(id, {useFindAndModify: false})
+    // })
+    // .then(item=>{
+    //     req.flash('success', 'Your item was deleted successfully!');
+    //     req.session.save(()=>res.redirect('/items'));
+    // })
+    // .catch(err=>next(err));
 };
+
+
+exports.fav = async (req, res) =>{
+    let customerId = req.session.user;    
+    let itemId = req.params.id;
+    const user = await User.findById(customerId);
+    
+    // 
+    const alreadyFavorited = user.favorites.some(fav => fav.dishId.equals(itemId));
+
+    
+    if (!alreadyFavorited) {
+        user.favorites.push({ dishId: itemId });
+        await user.save();
+        res.redirect('/items');
+    } else{
+        req.flash('error', 'Already favorited!');
+        req.session.save(()=>res.redirect('/items'));
+    }
+
+    
+};
+
+
+exports.unfavorite = async (req, res) =>{
+    try{
+        let customerId = req.session.user;    
+        let itemId = req.params.id;
+        const user = await User.findById(customerId);
+        
+        const index = user.favorites.findIndex(fav => fav.dishId.equals(itemId));
+
+        if (index !== -1) {
+            user.favorites.splice(index, 1); // remove the item from favorites
+            await user.save();
+            // req.flash('success', 'Item removed from favorites.');
+        } else {
+            req.flash('error', 'Item not found in your favorites.');
+        }
+
+        res.redirect('/profile/favorites');
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Could not remove from favorites.');
+        res.redirect('/profile/favorites');
+    }
+
+    
+};
+
+
+
+
+
 
 

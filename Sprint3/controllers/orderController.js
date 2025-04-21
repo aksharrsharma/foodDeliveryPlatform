@@ -24,7 +24,7 @@ exports.new = async(req, res) =>{
             })
             await order.save()
             // console.log(order);
-            res.redirect('/profile/mycart');
+            res.redirect('back');
 
 
         } else {
@@ -35,13 +35,13 @@ exports.new = async(req, res) =>{
                 // If item exists, increase the quantity
                 order.items[itemIndex].quantity += 1;
                 order.totalPrice += price;  // Update total price
-                res.redirect('/profile/mycart');
+                res.redirect('back');
                 
             } else {
                 // If item doesn't exist, add a new item
                 order.items.push({ itemId, quantity: 1 });
                 order.totalPrice += price;  // Update total price
-                res.redirect('/profile/mycart');
+                res.redirect('back');
             }
             await order.save()
             // console.log(order);
@@ -64,32 +64,35 @@ exports.delete = async (req, res) =>{
     let customerId = req.session.user;
 
     let item = await Item.findById(itemId)
-    console.log(item);
     let price = item.price;
 
-    let order = await Order.findOne({customerId:customerId});
+    let order = await Order.findOne({customerId: customerId, status: "pending"});
+    console.log(order);
+
     if(order){
         let itemIndex = order.items.findIndex(i => i.itemId.toString() === itemId);
-        if (itemIndex > -1 && order.items[itemIndex].quantity > 0) {
-            // If the order exists, check if the item is already in the order
-            let itemIndex = order.items.findIndex(i => i.itemId.toString() === itemId);
-            // If item exists, decrease the quantity
-            order.items[itemIndex].quantity -= 1;
-            order.totalPrice -= price;  // Update total price
-            res.redirect('/profile/mycart');
-            order.save();
-            if(order.items[itemIndex].quantity <1){
-                order.items.splice(itemIndex, 1);
-            }
-            
-        } 
-        // else if(order.items[itemIndex].quantity <1){    
-        // } 
-    } else{
-        req.flash('error', "You have no items in cart");
-        req.session.save(()=>res.redirect('back'));
+        
+        if (itemIndex > -1) {
+           // Decrease quantity
+           order.items[itemIndex].quantity -= 1;
+           order.totalPrice -= price;
+
+           // If quantity is 0, remove the item from the array
+           if (order.items[itemIndex].quantity < 1) {
+               order.items.splice(itemIndex, 1);
+           }
+
+           await order.save(); 
+           return res.redirect('/profile/mycart');
+        } else {
+            req.flash('error', 'Item not found in your cart');
+            return req.session.save(() => res.redirect('/profile/mycart'));
+        }
+    } else {
+        req.flash('error', 'You have no items in your cart');
+        return req.session.save(() => res.redirect('/profile/mycart'));
     }
-}
+};
 
     
 

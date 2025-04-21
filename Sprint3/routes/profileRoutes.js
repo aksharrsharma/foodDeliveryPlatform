@@ -10,12 +10,13 @@ router.get('/mycart', isLoggedIn, isNotAdmin, controller.displayUserCart);
 
 router.post('/mycart', isLoggedIn, isNotAdmin, controller.checkout);
 
-router.get('/receipt', isLoggedIn, isNotAdmin, controller.receipts);
+router.get('/receipt', isLoggedIn, controller.receipts);
 
 router.get('/transactions', isLoggedIn, isAdmin, controller.transactions);
 
 router.get('/dashboard', isLoggedIn, isAdmin, controller.dashboard);
 
+router.get('/favorites', isLoggedIn, isNotAdmin, controller.getFavorites);
 
 
 
