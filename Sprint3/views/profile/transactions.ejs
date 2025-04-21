@@ -1,121 +1,172 @@
 <%- include('../partials/header.ejs')%>
-<link rel="stylesheet" type="text/css" href="/css/items.css">
+<!-- Include the enhanced UI CSS -->
+<link rel="stylesheet" type="text/css" href="/css/enhanced-ui.css">
 
 <main>
-    <div class="menu-header">
-        <h2>Transactions</h2>
-    </div>
-
-<%
-function formatDate(dateInput) {
-    const date = new Date(dateInput);
-    const options = {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    };
-
-    // Format using toLocaleString
-    const formatted = date.toLocaleString('en-US', options);
-    return formatted + ' EST';
-}
-%>
-
-<% function capitalizeWords(str) {
-    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-} %>
-
-    <!-- <div class="grid-container-products"> -->
-        <% if(order.length) { %>
-            <% order.forEach(orderItem =>{ %>
-                <% if(parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
-                    <br><br>
-                    <h2><%= capitalizeWords(orderItem.customerId.firstName)%> <%= capitalizeWords(orderItem.customerId.lastName) %></h2>
-                    
-                    <button class="collapsible"> <h4><%= formatDate(orderItem.updatedAt)%> </h4></button>
-                    <div class="order-items content">
-                    <% orderItem.items.forEach(item=> { %> 
-                        <%if(item.itemId) { %>
-                            <div>
-                            <a href="/items/<%=item.itemId._id%>">
-                                <!-- <img src="<%=item.itemId.image%>" alt="<%= item.itemId.name %>"> -->
-                                <h3><%= capitalizeWords(item.itemId.name) %></h3>
-                            </a>
-                            <p>quantity: <%= item.quantity %> @ $<%= parseFloat(item.itemId.price).toFixed(2) %> </p>
-                            <!-- <p>$<%= parseFloat(item.itemId.price).toFixed(2) %></p> -->
-                            <p>$<%= parseFloat(item.quantity * parseFloat(item.itemId.price).toFixed(2) ).toFixed(2) %> </p>
-
-                            
-                            
+    <div class="transactions-container">
+        <h2 class="transactions-title"><i class="fas fa-exchange-alt"></i> Transaction History</h2>
+        
+        <div class="transaction-filters">
+            <div class="filter-group">
+                <span class="filter-label">Filter by:</span>
+                <select id="transactionFilter" class="filter-select">
+                    <option value="all">All Transactions</option>
+                    <option value="completed">Completed</option>
+                    <option value="pending">Pending</option>
+                    <option value="canceled">Canceled</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <span class="filter-label">Sort by:</span>
+                <select id="transactionSort" class="filter-select">
+                    <option value="date-new">Date (Newest First)</option>
+                    <option value="date-old">Date (Oldest First)</option>
+                    <option value="amount-high">Amount (Highest First)</option>
+                    <option value="amount-low">Amount (Lowest First)</option>
+                </select>
+            </div>
+        </div>
+        
+        <% if(order && order.length > 0) { %>
+            <div class="transaction-list">
+                <% 
+                function formatDate(dateInput) {
+                    const date = new Date(dateInput);
+                    const options = {
+                        timeZone: 'America/New_York',
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    };
+                    return date.toLocaleString('en-US', options) + ' EST';
+                }
+                
+                function capitalizeWords(str) {
+                    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+                }
+                %>
+                
+                <% order.forEach(orderItem => { %>
+                    <% if(parseFloat(orderItem.totalPrice).toFixed(2) !== "0.00") { %>
+                        <div class="transaction-item" 
+                             data-status="<%= orderItem.status %>" 
+                             data-date="<%= orderItem.updatedAt %>" 
+                             data-amount="<%= orderItem.totalPrice %>">
+                            <div class="transaction-header">
+                                <div class="transaction-customer">
+                                    <div class="customer-avatar">
+                                        <%= (orderItem.customerId.firstName && orderItem.customerId.firstName.charAt(0)) || 'U' %>
+                                    </div>
+                                    <div class="customer-info">
+                                        <div class="customer-name">
+                                            <%= capitalizeWords(orderItem.customerId.firstName) %> <%= capitalizeWords(orderItem.customerId.lastName) %>
+                                        </div>
+                                        <div class="transaction-id">Order #<%= orderItem._id.toString().substr(-6) %></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="transaction-meta">
+                                    <div class="transaction-date">
+                                        <i class="far fa-calendar-alt"></i> <%= formatDate(orderItem.updatedAt) %>
+                                    </div>
+                                    <div class="transaction-amount">
+                                        <i class="fas fa-tag"></i> $<%= parseFloat(orderItem.totalPrice).toFixed(2) %>
+                                    </div>
+                                    <span class="badge badge-<%= orderItem.status === 'completed' ? 'success' : 
+                                                               orderItem.status === 'pending' ? 'warning' : 'danger' %>">
+                                        <%= orderItem.status.charAt(0).toUpperCase() + orderItem.status.slice(1) %>
+                                    </span>
+                                </div>
                             </div>
-                        <% } %>                
-                    <% }) %>
-                    
-
-
-                    <!-- <form action="/profile/receipt" method="GET" >
-                        <button class="delete-button"><i class="fas fa-trash-alt"></i> Check out</button>
-                    </form> -->
-                    <%}%>
-                </div>
-                <h3>Total:  $<%=parseFloat(orderItem.totalPrice).toFixed(2)%></h3>
-
-                    <hr>
-
-
-            <% }); %> 
+                            
+                            <div class="transaction-details">
+                                <div class="transaction-products">
+                                    <% orderItem.items.forEach(item => { %>
+                                        <% if(item.itemId) { %>
+                                            <div class="transaction-product">
+                                                <div class="product-details">
+                                                    <div class="product-image">
+                                                        <img src="<%= item.itemId.image %>" alt="<%= item.itemId.name %>">
+                                                    </div>
+                                                    <div class="product-info">
+                                                        <h4><%= capitalizeWords(item.itemId.name) %></h4>
+                                                        <p><%= item.itemId.description.length > 60 ? 
+                                                            item.itemId.description.substring(0, 60) + '...' : 
+                                                            item.itemId.description %></p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="product-price-qty">
+                                                    <div class="product-qty">
+                                                        Qty: <strong><%= item.quantity %></strong>
+                                                    </div>
+                                                    <div class="product-price">
+                                                        $<%= parseFloat(item.itemId.price * item.quantity).toFixed(2) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                    <% }) %>
+                                </div>
+                                
+                                <div class="transaction-summary">
+                                    <div class="summary-row">
+                                        <span class="summary-label">Subtotal:</span>
+                                        <span class="summary-value">$<%= parseFloat(orderItem.totalPrice).toFixed(2) %></span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span class="summary-label">Tax (8%):</span>
+                                        <% const tax = orderItem.totalPrice * 0.08; %>
+                                        <span class="summary-value">$<%= parseFloat(tax).toFixed(2) %></span>
+                                    </div>
+                                    <div class="summary-row transaction-total">
+                                        <span class="summary-label">Total:</span>
+                                        <span class="summary-value">$<%= parseFloat(orderItem.totalPrice + tax).toFixed(2) %></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="transaction-actions">
+                                    <button class="btn btn-secondary print-receipt" data-order-id="<%= orderItem._id %>">
+                                        <i class="fas fa-print"></i> Print Receipt
+                                    </button>
+                                    <% if(orderItem.status === 'pending') { %>
+                                        <form action="/admin/orders/<%= orderItem._id %>/complete" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-check"></i> Mark Completed
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }) %>
+            </div>
+            
+            <!-- Simple pagination -->
+            <div class="pagination">
+                <span class="pagination-item"><i class="fas fa-chevron-left"></i></span>
+                <span class="pagination-item active">1</span>
+                <span class="pagination-item">2</span>
+                <span class="pagination-item">3</span>
+                <span class="pagination-item"><i class="fas fa-chevron-right"></i></span>
+            </div>
         <% } else { %>
-            <p>There are no receipts.</p>
+            <div class="empty-state">
+                <i class="fas fa-receipt"></i>
+                <p>No transactions found.</p>
+            </div>
         <% } %>
     </div>
 </main>
 
+<!-- Include the enhanced collapsible JS -->
+<script src="/js/enhanced-collapsible.js"></script>
+<!-- Include the dashboard enhancements JS for transaction functionality -->
+<script src="/js/dashboard-enhancements.js"></script>
+
 <%- include('../partials/footer.ejs')%>
-
-
-<style>
-    .collapsible {
-        background-color: #94e4f2;
-        color: black;
-        cursor: pointer;
-        padding: 10px;
-        width: 100%;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 17px;
-    }
-
-    .active, .collapsible:hover {
-        background-color: #186185;
-        color:white;
-    }
-
-    .content {
-        padding: 0 18px;
-        display: none; /* Hidden by default */
-        overflow: hidden;
-        background-color: #c3e6e4;
-    }
-</style>
-
-
-<script>
-    var coll = document.getElementsByClassName("collapsible");
-
-    for (var i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none"; // Hide the content
-            } else {
-                content.style.display = "block"; // Show the content
-            }
-        });
-    }
-</script>

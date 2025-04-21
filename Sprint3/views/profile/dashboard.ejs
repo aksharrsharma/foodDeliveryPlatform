@@ -1,63 +1,174 @@
 <%- include('../partials/header.ejs')%>
-<link rel="stylesheet" type="text/css" href="/css/items.css">
-
-<%
-function formatDate(dateInput) {
-    const date = new Date(dateInput);
-    const options = {
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    };
-
-    // Format using toLocaleString
-    const formatted = date.toLocaleString('en-US', options);
-    return formatted + ' EST';
-}
-%>
-
-<% function capitalizeWords(str) {
-    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
-} %>
-
+<!-- Include the enhanced UI CSS -->
+<link rel="stylesheet" type="text/css" href="/css/enhanced-ui.css">
 
 <main>
-    <div class="menu-header">
-        <h2>Dashboard</h2>
-    </div>
-
-   
-
-    <!-- <div class="grid-container-products"> -->
-        <% for (let id in itemSales) { %>
-            <h2><%= capitalizeWords(itemSales[id].name) %></h2>
-            <p>Qty sold: <%= itemSales[id].totalQuantity %></p>
-            <p>Sales price: $<%= parseFloat(itemSales[id].price).toFixed(2) %></p>
-            <p>Sales revenue:  $<%= parseFloat(itemSales[id].totalQuantity * itemSales[id].price).toFixed(2) %></p>
-          
-
-        <% } %>
-        <hr><br>
-        <h2>Sales Revenue:  $<%= parseFloat(sum).toFixed(2) %></h2> 
-        <hr>
-
-        <br><br>
-        <h1>Purchases</h1>
-        <% for (let id in purchases) { %>
-
-            <a href="/profile/receipt"> <h2><%= capitalizeWords(purchases[id].name) %> </h2> </a>
-            <p>Latest purcase: <%= formatDate(purchases[id].date) %></p>
-            <p>Complated Transactions: <%= purchases[id].completedOrders %> </p>
-            <p>Total purchases: $<%= parseFloat(purchases[id].totalSpent).toFixed(2) %></p>
-        <% } %>
-          
+    <div class="dashboard-container">
+        <h2 class="dashboard-title"><i class="fas fa-chart-line"></i> Admin Dashboard</h2>
         
-     
+        <div class="dashboard-summary">
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="summary-title">Total Items Sold</div>
+                <% 
+                let totalItemsSold = 0;
+                for (let id in itemSales) {
+                    totalItemsSold += itemSales[id].totalQuantity;
+                }
+                %>
+                <div class="summary-value"><%= totalItemsSold %></div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="summary-title">Total Revenue</div>
+                <div class="summary-value">$<%= parseFloat(sum).toFixed(2) %></div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="summary-title">Active Customers</div>
+                <% 
+                let activeCustomers = 0;
+                for (let id in purchases) {
+                    activeCustomers++;
+                }
+                %>
+                <div class="summary-value"><%= activeCustomers %></div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="summary-title">Completed Orders</div>
+                <% 
+                let completedOrders = 0;
+                for (let id in purchases) {
+                    completedOrders += purchases[id].completedOrders;
+                }
+                %>
+                <div class="summary-value"><%= completedOrders %></div>
+            </div>
+        </div>
+        
+        <!-- Charts for sales visualization -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-chart-bar"></i> Sales Overview
+            </div>
+            <div class="section-body">
+                <div class="charts-container">
+                    <div class="chart-wrapper">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Item sales details -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-list"></i> Menu Item Performance
+            </div>
+            <div class="section-body">
+                <div class="item-sales-grid">
+                    <% for (let id in itemSales) { %>
+                        <div class="item-sales-card">
+                            <div class="item-sales-name">
+                                <%= capitalizeWords(itemSales[id].name) %>
+                                <span class="badge badge-primary">Menu Item</span>
+                            </div>
+                            <div class="item-sales-stats">
+                                <div class="sales-stat">
+                                    <div class="stat-label">Quantity Sold</div>
+                                    <div class="stat-value" data-type="quantity"><%= itemSales[id].totalQuantity %></div>
+                                </div>
+                                <div class="sales-stat">
+                                    <div class="stat-label">Unit Price</div>
+                                    <div class="stat-value">$<%= parseFloat(itemSales[id].price).toFixed(2) %></div>
+                                </div>
+                                <div class="sales-stat">
+                                    <div class="stat-label">Revenue</div>
+                                    <div class="stat-value" data-type="revenue">$<%= parseFloat(itemSales[id].totalQuantity * itemSales[id].price).toFixed(2) %></div>
+                                </div>
+                                <div class="sales-stat">
+                                    <div class="stat-label">% of Total</div>
+                                    <% const percentage = (itemSales[id].totalQuantity * itemSales[id].price / sum) * 100; %>
+                                    <div class="stat-value"><%= percentage.toFixed(1) %>%</div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customer insights -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-user-friends"></i> Customer Insights
+            </div>
+            <div class="section-body">
+                <% 
+                function formatDate(dateInput) {
+                    const date = new Date(dateInput);
+                    const options = {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    };
+                    return date.toLocaleDateString('en-US', options);
+                }
+                
+                function capitalizeWords(str) {
+                    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+                }
+                %>
+                
+                <div class="customer-purchases">
+                    <% for (let id in purchases) { %>
+                        <div class="customer-card">
+                            <div class="customer-info">
+                                <div class="customer-name"><%= capitalizeWords(purchases[id].name) %></div>
+                                <div class="customer-date">Latest purchase: <%= formatDate(purchases[id].date) %></div>
+                            </div>
+                            <div class="customer-stats">
+                                <div class="customer-stat">
+                                    <div class="stat-label">Orders</div>
+                                    <div class="stat-value"><%= purchases[id].completedOrders %></div>
+                                </div>
+                                <div class="customer-stat">
+                                    <div class="stat-label">Spent</div>
+                                    <div class="stat-value">$<%= parseFloat(purchases[id].totalSpent).toFixed(2) %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Revenue summary footer -->
+        <div class="revenue-summary">
+            <div class="revenue-title">Total Sales Revenue</div>
+            <div class="revenue-value">$<%= parseFloat(sum).toFixed(2) %></div>
+        </div>
     </div>
 </main>
+
+<!-- Include Chart.js for visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Include the dashboard enhancements JS -->
+<script src="/js/dashboard-enhancements.js"></script>
 
 <%- include('../partials/footer.ejs')%>
