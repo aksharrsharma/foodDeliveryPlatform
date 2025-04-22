@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(notificationContainer);
   }
 
-  // Update cart badge count
-  updateCartBadge();
-
   // Add event listeners to all add to cart forms
   const addToCartForms = document.querySelectorAll('form[action*="/orders"]');
   
@@ -23,32 +20,23 @@ document.addEventListener('DOMContentLoaded', function() {
       // Get item details
       const itemContainer = form.closest('.menu-item') || form.closest('.item-container');
       const itemName = itemContainer ? itemContainer.querySelector('.name').textContent : 'Item';
-      const itemId = form.action.split('/').pop().split('?')[0];
       
-      // Get quantity if available
-      const quantityInput = itemContainer ? itemContainer.querySelector('.quantity-input') : null;
-      const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
-      
-      // Add item to cart via fetch API
+      // Submit form using fetch API
       fetch(form.action, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantity: quantity })
+        }
       })
       .then(response => {
         if (response.ok) {
-          // Show notification
-          showCartNotification(itemName, quantity);
+          // Show notification with item name
+          showCartNotification(itemName);
           
-          // Reset quantity input to 1 if it exists
-          if (quantityInput) {
-            quantityInput.value = 1;
-          }
-          
-          // Update cart badge
-          updateCartBadge();
+          // Redirect to the same page after a short delay
+          setTimeout(() => {
+            window.location.href = window.location.href;
+          }, 1000);
         } else {
           console.error('Error response from server');
         }
@@ -59,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Also handle standalone add-to-cart buttons
+  // Also handle standalone add-to-cart buttons that aren't in forms
   const addToCartButtons = document.querySelectorAll('.add-to-cart-btn, button.add-to-cart');
   
   addToCartButtons.forEach(button => {
@@ -76,30 +64,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const itemName = itemContainer ? itemContainer.querySelector('.name').textContent : 'Item';
       const itemId = button.dataset.itemId;
       
-      // Get quantity if available
-      const quantityInput = itemContainer ? itemContainer.querySelector('.quantity-input') : null;
-      const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
-      
       // Add item to cart via fetch API
       fetch(`/items/${itemId}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantity: quantity })
+        }
       })
       .then(response => {
         if (response.ok) {
-          // Show notification
-          showCartNotification(itemName, quantity);
-          
-          // Reset quantity input to 1 if it exists
-          if (quantityInput) {
-            quantityInput.value = 1;
-          }
-          
-          // Update cart badge
-          updateCartBadge();
+          // Show notification with item name
+          showCartNotification(itemName);
         } else {
           console.error('Error response from server');
         }
@@ -109,43 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-  
-  // Handle remove from cart buttons
-  const removeButtons = document.querySelectorAll('form[action*="_method=DELETE"] button');
-  
-  removeButtons.forEach(button => {
-    const form = button.closest('form');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      fetch(form.action, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        if (response.ok) {
-          // If we're on the cart page, reload to update the cart view
-          if (window.location.pathname.includes('/mycart')) {
-            window.location.reload();
-          } else {
-            // Update cart badge
-            updateCartBadge();
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Error removing from cart:', error);
-      });
-    });
-  });
 });
 
 // Function to show notification
-function showCartNotification(itemName, quantity = 1) {
+function showCartNotification(itemName) {
   const container = document.querySelector('.cart-notification-container');
   if (!container) return;
   
@@ -157,7 +99,7 @@ function showCartNotification(itemName, quantity = 1) {
       <i class="fas fa-check-circle"></i>
     </div>
     <div class="notification-content">
-      <p>${quantity > 1 ? quantity + ' x ' : ''}${itemName} added to your cart</p>
+      <p>${itemName} added to your cart</p>
     </div>
     <button class="notification-close">
       <i class="fas fa-times"></i>
@@ -187,29 +129,4 @@ function showCartNotification(itemName, quantity = 1) {
   setTimeout(() => {
     notification.classList.add('notification-visible');
   }, 10);
-}
-
-// Function to update cart badge count
-function updateCartBadge() {
-  const cartBadge = document.querySelector('.cart-badge');
-  if (!cartBadge) return;
-  
-  // Call API to get current cart count
-  fetch('/profile/mycart/count')
-    .then(response => {
-      if (response.ok) return response.json();
-      return { count: 0 };
-    })
-    .then(data => {
-      if (data.count > 0) {
-        cartBadge.setAttribute('data-count', data.count);
-        cartBadge.classList.add('has-items');
-      } else {
-        cartBadge.setAttribute('data-count', '0');
-        cartBadge.classList.remove('has-items');
-      }
-    })
-    .catch(error => {
-      console.error('Error getting cart count:', error);
-    });
 }
