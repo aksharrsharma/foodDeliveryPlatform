@@ -26,15 +26,19 @@
                     <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>
                     <% if(!isAdmin) { %>
                         <div class="item-actions">
-                            <form action='/items/<%=item._id%>/orders' method='POST'>
-                                <button class="add-to-cart">Add to Cart</button>
-                            </form>
-
-                            <% if (!favoritedIds.includes(item._id.toString())) { %>
-                                <form action="/items/<%=item._id%>/favorites" method="POST">
-                                    <button class="favorite-btn"><i class="fa-solid fa-star"></i></button>
+                            <% if(user) { %>
+                                <form action='/items/<%=item._id%>/orders' method='POST'>
+                                    <button class="add-to-cart">Add to Cart</button>
                                 </form>
-                            <%}%>
+
+                                <% if (!favoritedIds.includes(item._id.toString())) { %>
+                                    <form action="/items/<%=item._id%>/favorites" method="POST">
+                                        <button class="favorite-btn"><i class="fa-solid fa-star"></i></button>
+                                    </form>
+                                <% } %>
+                            <% } else { %>
+                                <a href="/users/login" class="add-to-cart">Add to Cart</a>
+                            <% } %>
                         </div>
                     <% } %>
                 </div>

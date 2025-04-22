@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(notificationContainer);
   }
 
+  // Check if user is logged in (we'll determine this by checking for a variable in the rendered template)
+  const isLoggedIn = document.body.dataset.userLoggedIn === 'true';
+
   // Add event listeners to all add to cart forms
   const addToCartForms = document.querySelectorAll('form[action*="/orders"]');
   
@@ -16,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     form.addEventListener('submit', function(e) {
       e.preventDefault(); // Prevent form submission
+      
+      // If user is not logged in, redirect to login page
+      if (!isLoggedIn) {
+        window.location.href = '/users/login';
+        return;
+      }
       
       // Get item details
       const itemContainer = form.closest('.menu-item') || form.closest('.item-container');
@@ -58,6 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!button.dataset.itemId) return;
       
       e.preventDefault();
+      
+      // If user is not logged in, redirect to login page
+      if (!isLoggedIn) {
+        window.location.href = '/users/login';
+        return;
+      }
       
       // Get item details
       const itemContainer = button.closest('.menu-item') || button.closest('.item-container');
