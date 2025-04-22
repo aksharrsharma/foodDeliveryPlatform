@@ -66,7 +66,7 @@ exports.show = (req, res) =>{
     .catch(err=>next(err));
 };
 
-//GET /items/:id/edit: send html for mfor editing an existing item
+//GET /items/:id/edit: send html form for mfor editing an existing item
 exports.edit = (req, res) =>{
     let id = req.params.id;
     Item.findById(id)
@@ -127,39 +127,33 @@ exports.delete = async (req, res, next)=>{
         console.log(err);
         next(err);
     }
-
-
-    // Item.deleteMany({item: id})
-    // .then(()=>{
-    //     return Item.findByIdAndDelete(id, {useFindAndModify: false})
-    // })
-    // .then(item=>{
-    //     req.flash('success', 'Your item was deleted successfully!');
-    //     req.session.save(()=>res.redirect('/items'));
-    // })
-    // .catch(err=>next(err));
 };
 
 
 exports.fav = async (req, res) =>{
-    let customerId = req.session.user;    
-    let itemId = req.params.id;
-    const user = await User.findById(customerId);
+    try {
+        let customerId = req.session.user;    
+        let itemId = req.params.id;
+        const user = await User.findById(customerId);
+        
+        // 
+        const alreadyFavorited = user.favorites.some(fav => fav.dishId.equals(itemId));
     
-    // 
-    const alreadyFavorited = user.favorites.some(fav => fav.dishId.equals(itemId));
-
-    
-    if (!alreadyFavorited) {
-        user.favorites.push({ dishId: itemId });
-        await user.save();
-        res.redirect('/items');
-    } else{
-        req.flash('error', 'Already favorited!');
-        req.session.save(()=>res.redirect('/items'));
+        
+        if (!alreadyFavorited) {
+            user.favorites.push({ dishId: itemId });
+            await user.save();
+            req.flash('success', 'Item added to favorites!');
+            req.session.save(() => res.redirect('/items'));
+        } else{
+            req.flash('error', 'Already favorited!');
+            req.session.save(()=>res.redirect('/items'));
+        }
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'An error occurred while adding to favorites.');
+        req.session.save(() => res.redirect('/items'));
     }
-
-    
 };
 
 
@@ -174,7 +168,7 @@ exports.unfavorite = async (req, res) =>{
         if (index !== -1) {
             user.favorites.splice(index, 1); // remove the item from favorites
             await user.save();
-            // req.flash('success', 'Item removed from favorites.');
+            req.flash('success', 'Item removed from favorites.');
         } else {
             req.flash('error', 'Item not found in your favorites.');
         }
@@ -185,13 +179,4 @@ exports.unfavorite = async (req, res) =>{
         req.flash('error', 'Could not remove from favorites.');
         res.redirect('/profile/favorites');
     }
-
-    
 };
-
-
-
-
-
-
-

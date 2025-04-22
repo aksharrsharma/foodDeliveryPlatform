@@ -43,10 +43,10 @@ router.delete('/:id', controller.delete);
 
 router.use('/:id/orders', orderRoutes);
 
-router.post('/:id/favorites', controller.fav);
+router.post('/:id/favorites', isLoggedIn, controller.fav);
 
-router.post('/:id/unfavorite', controller.unfavorite);
+router.post('/:id/unfavorite', isLoggedIn, controller.unfavorite);
 
 
 
-module.exports = router; 
+module.exports = router;
