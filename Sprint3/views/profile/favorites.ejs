@@ -1,43 +1,52 @@
 <%- include('../partials/header.ejs')%>
 <link rel="stylesheet" type="text/css" href="/css/items.css">
+<link rel="stylesheet" type="text/css" href="/css/favorites.css">
+
+<% function capitalizeWords(str) {
+    return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+} %>
 
 <main>
     <div class="menu-header">
-        <h2>Favorites</h2>
+        <h2><i class="fa-solid fa-star"></i> My Favorites</h2>
+        <p>Your personal collection of favorite dishes from Silver Spoon</p>
     </div>
 
     <div class="grid-container-products">
-        <% if(order.length) { %>
-            
-            <% order.forEach(item =>{ %>
-                <%= console.log(item)%>
-                        <%if(item && item._id) { %>
-                            <div>
-                            <a href="/items/<%=item._id%>">
-                                <img src="<%=item.image%>" alt="<%= item.name %>">
-                                <h2><%= item.name %></h2>
-                            </a>
-                            <h2>$<%= parseFloat(item.price).toFixed(2) %></h2>
+        <% if(order && order.length > 0) { %>
+            <% order.forEach(item => { %>
+                <% if(item && item._id) { %>
+                    <div class="menu-item favorite-item">
+                        <a href="/items/<%=item._id%>">
+                            <img src="<%=item.image%>" alt="<%= item.name %>">
+                        </a>
+                        <a href="/items/<%=item._id%>">
+                            <h3 class="name"><%= capitalizeWords(item.name) %></h3>
+                        </a>
+                        <p class="condition"><%= item.description %></p>
+                        <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>
+                        
+                        <div class="item-actions">
                             <form action='/items/<%=item._id%>/orders' method='POST'>
-                                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                            </form>
-                            <form action="/items/<%=item._id%>/unfavorite" method="POST">
-                                <button class="delete-button"><i class="fa-solid fa-star"></i> Unfavorite</button>
+                                <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                             </form>
                             
-                            </div>
-                        <% } %>
-
-
-                
-                    
-                
+                            <form action="/items/<%=item._id%>/unfavorite" method="POST">
+                                <button class="unfavorite-btn" title="Remove from favorites">
+                                    <i class="fa-solid fa-star"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% } %>
             <% }); %> 
-
-        <% } else { %> <p>You have no Favorites.</p> <% } %>        
-
-
-
+        <% } else { %>
+            <div class="empty-state">
+                <i class="fa-solid fa-star empty-star"></i>
+                <p>You don't have any favorites yet.</p>
+                <a href="/items" class="cta-button">Browse Our Menu</a>
+            </div>
+        <% } %>
     </div>
 </main>
 

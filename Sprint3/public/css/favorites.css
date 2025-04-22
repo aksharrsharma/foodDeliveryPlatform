@@ -1,0 +1,193 @@
+/* Enhanced styles for favorites page */
+.menu-header h2 {
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.menu-header h2 i {
+    color: #FFD700;
+    margin-right: 0.75rem;
+    font-size: 2rem;
+}
+
+.favorite-item {
+    position: relative;
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.favorite-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 128, 128, 0.3);
+    border-color: #FFD700;
+}
+
+.favorite-item:before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background-color: #FFD700;
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-item:after {
+    content: '★';
+    position: absolute;
+    top: -8px;
+    right: -2px;
+    color: white;
+    font-size: 12px;
+    z-index: 2;
+}
+
+.item-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem 1rem;
+    gap: 10px;
+}
+
+.add-to-cart {
+    background-color: teal;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.add-to-cart i {
+    margin-right: 5px;
+}
+
+.add-to-cart:hover {
+    background-color: #006666;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unfavorite-btn {
+    width: 36px;
+    height: 36px;
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #FFD700;
+    font-size: 16px;
+}
+
+.unfavorite-btn:hover {
+    background-color: #fff9e6;
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
+    border-color: #FFD700;
+}
+
+.unfavorite-btn i {
+    transition: transform 0.3s ease;
+}
+
+.unfavorite-btn:hover i {
+    transform: rotate(72deg);
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 0;
+    text-align: center;
+}
+
+.empty-star {
+    font-size: 5rem;
+    color: #f0f0f0;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: teal;
+    color: white;
+    padding: 0.9rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.cta-button:hover {
+    background-color: #006666;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation for favorite items when page loads */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorite-item {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.favorite-item:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.favorite-item:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.favorite-item:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.favorite-item:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .item-actions {
+        flex-direction: row;
+    }
+    
+    .add-to-cart {
+        padding: 0.7rem;
+    }
+}
