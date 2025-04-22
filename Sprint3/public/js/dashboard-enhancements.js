@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
       
       itemsArray.sort((a, b) => {
         if (sortValue === 'date-new') {
-          return new Date(b.dataset.date) - new Date(a.dataset.date);
+            return new Date(b.dataset.date) - new Date(a.dataset.date);
         } else if (sortValue === 'date-old') {
-          return new Date(a.dataset.date) - new Date(b.dataset.date);
+            return new Date(a.dataset.date) - new Date(b.dataset.date);
         } else if (sortValue === 'amount-high') {
-          return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
+            return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
         } else if (sortValue === 'amount-low') {
-          return parseFloat(a.dataset.amount) - parseFloat(b.dataset.amount);
+            return parseFloat(a.dataset.amount) - parseFloat(b.dataset.amount);
         }
         return 0;
       });
@@ -119,10 +119,14 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             title: {
               display: true,
-              text: 'Product Sales Overview'
+              text: 'Product Sales Overview',
+              font: {
+                size: 18
+              }
             },
             legend: {
               position: 'top',
@@ -176,13 +180,22 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             title: {
               display: true,
-              text: 'Revenue by Product'
+              text: 'Revenue by Product',
+              font: {
+                size: 18
+              }
             },
             legend: {
               position: 'right',
+              labels: {
+                font: {
+                  size: 14
+                }
+              }
             }
           }
         }

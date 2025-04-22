@@ -854,7 +854,7 @@ body {
 }
 
 .chart-wrapper {
-    height: 350px;
+    height: 500px;  /* Increased from 350px to 500px */
     position: relative;
 }
 
