@@ -123,3 +123,26 @@ exports.getFavorites = async (req, res) =>{
 
 
 };
+
+
+// Get cart count for AJAX requests
+exports.getCartCount = async (req, res) => {
+    try {
+        let customerId = req.session.user;
+        let order = await Order.findOne({customerId: customerId, status: "pending"});
+        
+        if (!order || !order.items || order.items.length === 0) {
+            return res.json({ count: 0 });
+        }
+        
+        // Calculate total quantity across all items
+        let count = order.items.reduce((total, item) => {
+            return total + (item.quantity || 1);
+        }, 0);
+        
+        res.json({ count });
+    } catch (err) {
+        console.error('Error getting cart count:', err);
+        res.status(500).json({ count: 0 });
+    }
+};

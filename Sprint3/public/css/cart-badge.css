@@ -1,0 +1,39 @@
+/* Cart Badge Styles */
+.cart-badge {
+    position: relative;
+}
+
+.cart-badge[data-count]:after {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    content: attr(data-count);
+    font-size: 12px;
+    font-weight: bold;
+    background: #dc3545;
+    color: white;
+    text-align: center;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 1px #333;
+    display: none;
+}
+
+.cart-badge.has-items[data-count]:after {
+    display: block;
+    animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

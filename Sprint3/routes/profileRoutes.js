@@ -8,6 +8,9 @@ const router = express.Router();
 // get all orders associated with the user
 router.get('/mycart', isLoggedIn, isNotAdmin, controller.displayUserCart);
 
+// get cart count for AJAX requests
+router.get('/mycart/count', isLoggedIn, controller.getCartCount);
+
 router.post('/mycart', isLoggedIn, isNotAdmin, controller.checkout);
 
 router.get('/receipt', isLoggedIn, controller.receipts);
@@ -18,10 +21,4 @@ router.get('/dashboard', isLoggedIn, isAdmin, controller.dashboard);
 
 router.get('/favorites', isLoggedIn, isNotAdmin, controller.getFavorites);
 
-
-
-
-// new order 
-// router.post('/', isLoggedIn, isNotAdmin, controller.new);
-
-module.exports = router; 
+module.exports = router;
