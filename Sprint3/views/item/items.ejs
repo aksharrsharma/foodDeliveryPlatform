@@ -25,16 +25,17 @@
                     <p class="condition"><%= item.description %></p>
                     <h4 class="price">$<%= parseFloat(item.price).toFixed(2) %></h4>
                     <% if(!isAdmin) { %>
-                        <form action='/items/<%=item._id%>/orders' method='POST'>
-                            <button class="add-to-cart">Add to Cart</button>
-                        </form>
-
-                        <% if (!favoritedIds.includes(item._id.toString())) { %>
-                            <form action="/items/<%=item._id%>/favorites" method="POST">
-                                <button class=""><i class="fa-solid fa-star"></i></button>
+                        <div class="item-actions">
+                            <form action='/items/<%=item._id%>/orders' method='POST'>
+                                <button class="add-to-cart">Add to Cart</button>
                             </form>
-                        <%}%>
-                        
+
+                            <% if (!favoritedIds.includes(item._id.toString())) { %>
+                                <form action="/items/<%=item._id%>/favorites" method="POST">
+                                    <button class="favorite-btn"><i class="fa-solid fa-star"></i></button>
+                                </form>
+                            <%}%>
+                        </div>
                     <% } %>
                 </div>
             <% }); %>
